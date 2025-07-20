@@ -13,18 +13,18 @@ class Player {
   public:
     Player(const std::string &name);
 
-    // draw a card from deck and add it to hand
-    void drawCard();
+    // draw a card from deck and add it to hand, false otherwise
+    bool drawCard();
     void startTurn();
     void endTurn();
 
     // accessors / setters
-    const std::string getName() const;
+    std::string getName() const;
     int getLife() const;
     void setLife(int life);
     int getMagic() const;
     void setMagic(int magic);
-    
+
 }
 
 #endif
