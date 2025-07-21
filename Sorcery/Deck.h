@@ -17,7 +17,6 @@ public:
     bool isEmpty() const;
     // loads card names from file and use CardFactory to create cards
     void load_deck(const std::string& filename);
-
 };
 
 #endif
