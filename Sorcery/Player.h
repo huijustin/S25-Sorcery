@@ -17,6 +17,7 @@ class Player {
     Ritual ritual;
 
 public:
+    int getLife() const;
     void playCard(int index);
     void attack(int fromIdx, int toIdx);
     void useAbility(int fromIdx, int toIdx);
