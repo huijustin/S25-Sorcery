@@ -9,9 +9,9 @@ bool Hand::addCard(Card *card) {
 }
 
 Card* Hand::removeCard(int i) {
-    if (i >= hand.size() || i < 0) return nullptr;
-    Card* c = hand[i];
-    hand.erase(hand.begin() + i);
+    if (i > hand.size() || i < 1) return nullptr;
+    Card* c = hand[i - 1];
+    hand.erase(hand.begin() + (i - 1));
     return c;
 }
 
@@ -20,10 +20,10 @@ bool isFull() const { return hand.size() >= maxSize; }
 int getSize() const { return Hand.size(); }
 
 Card* Hand::getCard(int i) const {
-    if (i >= hand.size() || i < 0) {
+    if (i > hand.size() || i < 1) {
         return nullptr;
     } else {
-        return Hand[i];
+        return Hand[i - 1];
     }
 }
 
