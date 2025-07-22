@@ -20,3 +20,5 @@ void SummonEffect::apply() {
         std::cout << "Summoned " << copy->getName() << std::endl;
     }
 }
+
+// Create overload for summoning from graveyard
