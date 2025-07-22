@@ -1,6 +1,7 @@
 #pragma once
 #include "Card.h"
 #include "Enchantment.h"
+#include "Ability.h"
 #include <vector>
 
 class Minion : public Card {

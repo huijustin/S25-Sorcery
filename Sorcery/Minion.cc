@@ -6,7 +6,7 @@ Minion::Minion(int ID, std::string name, int cost, int atk, int def, Ability* ab
       attack(atk), defense(def), actions(0), ability(ability) {} // Minion attributes
 
 void Minion::attackTarget(Minion* targetEntity) {
-    if (actions <= 0) { return }
+    if (actions <= 0) { return; }
 
     if (!targetEntity) {
         std::cerr << "Error: No Target." << std::endl;
