@@ -1,14 +1,14 @@
 #include "Minion.h"
 #include <iostream>
 
-Minion::Minion(int cost, int atk, int def) 
-    : Card(cost), attack(atk), defense(def), actions(0) {}
+Minion::Minion(int ID, std::string name, int cost, int atk, int def)
+    : Card(ID, std::move(name), cost), attack(atk), defense(def), actions(0) {}
 
 void Minion::attackTarget(Minion* targetEntity) {
     std::cout << "Minion attacks another minion!" << std::endl;
 }
 
-void Minion::trigger(std::string eventString) {
+void Minion::trigger(const std::string& eventString) {
     std::cout << "Minion triggers on event: " << eventString << std::endl;
 }
 
