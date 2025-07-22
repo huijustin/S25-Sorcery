@@ -37,11 +37,13 @@ void Minion::trigger(const std::string& eventString) {
 
 void Minion::play() {
     std::cout << "Playing " << getName() << "." << std::endl;
+
+    // Code to spend mana from player for playing minion
 }
 
 void Minion::useAbility() {
     if (getAbility()) {
-        std::cout << getName() << " uses its ability: " << ability->getText() << std::endl;
+        std::cout << getName() << " uses its ability: " << ability->getDescription() << std::endl;
         ability->useEffect();
         return;
     } 
