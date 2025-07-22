@@ -21,8 +21,8 @@ class Player {
 
 public:
     // ctor
-    Player(const std::string &name, Deck initDeck);
-
+    Player(const std::string &name, const std::string& deckFile);
+    ~Player();
     // public methods
     void startTurn();
     void endTurn();
@@ -35,6 +35,8 @@ public:
     std::string getName() const;
     int getLife() const;
     int getMagic() const;
+
+    // for testing
     void setLife(int l);
     void setMagic(int m);
 

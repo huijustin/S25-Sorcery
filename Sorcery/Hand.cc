@@ -16,6 +16,10 @@ Card* Hand::removeCard(int i) {
         std::cerr << "Invalid index for removing card: " << i << " in Hand" << std::endl;
         return nullptr;
     }
+    if (hand.empty()) {
+        std::cerr << "Hand is empty, cannot remove card." << std::endl;
+        return nullptr;
+    }
     Card* c = hand[i - 1];
     hand.erase(hand.begin() + (i - 1));
     return c;

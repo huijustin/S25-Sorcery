@@ -10,15 +10,19 @@ Player::Player(const std::string &name, const std::string& deckFile) :
     }
 }
 
+Player::~Player() { delete ritual; }
+
 std::string Player::getName() const { return name; }
 int Player::getLife() const { return life; }
-int getMagic() const { return magic; }
-void setLife(int l) { life = l; }
-void setMagic(int m) { magic = m; }
+int Player::getMagic() const { return magic; }
+
+// for testing
+void Player::setLife(int l) { life = l; }
+void Player::setMagic(int m) { magic = m; }
 
 void Player::takeDamage(int amount) { life -= amount; }
 void Player::gainMagic(int amount) { magic += amount; }
-void Player::spendMagic(int cost) { mgaic -= cost; }
+void Player::spendMagic(int cost) { magic -= cost; }
 
 
 void Player::startTurn() {
@@ -32,18 +36,60 @@ void Player::endTurn() {
 }
 
 void Player::playCard(int idx) {
-    Card* c = hand.removeCard(idx);
+    Card *c = hand.getCard(idx);
     if (!c) {
-        std::cerr << "Error: cannot play card" << std::endl;
+        std::cerr << "Error: Invalid card index or Hand is empty" << std::endl;
         return;
     }
-    spendMagic(c->getCost());
-    c->play();
+    if (c->getCost() > magic) {
+        std::cerr << "Error: Not enough magic to play this card." << std::endl;
+        return;
+    }
+    if (idx < 1 || idx > hand.getSize()) {
+        std::cerr << "Error: Invalid card index." << std::endl;
+        return;
+    }
+    // Check if the card is a Ritual
+    if (Ritual* ritualCard = dynamic_cast<Ritual*>(c)) {
+        if (ritual) {
+            std::cerr << "Error: Ritual slot is already occupied." << std::endl;
+            return;
+        }
+        ritual = ritualCard; // Set the ritual
+        Card *toPlay = hand.removeCard(idx); // Remove from hand
+        ritual->play(); // Play the ritual
+        return;
+    }
+    // Check if the card is a Minion
+    if (Minion* minionCard = dynamic_cast<Minion*>(c)) {
+        if (!board.addMinion(minionCard)) { 
+            std::cerr << "Error: Board is full, cannot add minion." << std::endl;
+            return;
+        }
+        Card *toPlay = hand.removeCard(idx); // Remove from hand
+        minionCard->play(); // Play the minion
+        return;
+    }
+    // For other card types, just play the card
+    if (hand.isFull()) {
+        std::cerr << "Error: Hand is full, cannot play this card." << std::endl;
+        return;
+    }
+    // Check if the card is a spell or ability
+    if (c->getCost() > magic) {
+        std::cerr << "Error: Not enough magic to play this card." << std::endl;
+        return;
+    }
+    // Proceed to play the card
+    Card *toPlay = hand.removeCard(idx);
+    spendMagic(c->getCost()); // Deduct magic cost
+    c->play();  
+
     // TODO: place c on board, graveyard, or ritual slot based on dynamic type
 }
 
 void Player::attack(int fromIdx, int toIdx) {
-    if (fromIdx < 1 || fromIdx > board.size()) {
+    if (fromIdx < 1 || fromIdx > board.getMinions().size()) {
         std::cerr << "Error: Invalid attacker Index" << std::endl;
         return;
     }
@@ -58,7 +104,7 @@ void Player::attack(int fromIdx, int toIdx) {
 }
 
 void Player::useAbility(int fromIdx, int targetIdx) {
-    if (fromIdx < 1 || fromIdx > board.size()) {
+    if (fromIdx < 1 || fromIdx > board.getMinions().size()) {
         std::cerr << "Error: Invalid attacking minion index" << std::endl;
         return;
     }
