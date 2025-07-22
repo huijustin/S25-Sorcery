@@ -33,7 +33,7 @@ void Deck::shuffle() {
 
 Card* Deck::draw() {
     if (cards.empty()) return nullptr;
-    Card: drawnCard = cards.back();
+    Card* drawnCard = cards.back();
     cards.pop_back();
     return drawnCard;
 }

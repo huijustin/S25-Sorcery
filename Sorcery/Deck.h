@@ -5,7 +5,7 @@
 #include "Card.h"
 
 class Deck {
-    std::vector<Card*> hand;
+    std::vector<Card*> cards;
 public:
     ~Deck();
 
