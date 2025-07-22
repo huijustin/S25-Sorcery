@@ -12,8 +12,12 @@ int Card::getID() {
     return cardID;
 }
 
-std::string Card::getName() {
+std::string Card::getName() const{
     return name;
+}
+
+std::string Card::getCardText() const { 
+    return cardText; 
 }
 
 Card::~Card() {}

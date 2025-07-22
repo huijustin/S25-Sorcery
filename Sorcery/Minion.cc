@@ -1,8 +1,9 @@
 #include "Minion.h"
 #include <iostream>
 
-Minion::Minion(int ID, std::string name, int cost, int atk, int def)
-    : Card(ID, std::move(name), cost), attack(atk), defense(def), actions(0) {}
+Minion::Minion(int ID, std::string name, int cost, int atk, int def, Ability* ability, std::string cardText)
+    : Card(ID, std::move(name), cost, std::move(cardText)), // Card attributes
+      attack(atk), defense(def), actions(0), ability(ability) {} // Minion attributes
 
 void Minion::attackTarget(Minion* targetEntity) {
     if (actions <= 0) { return }
@@ -36,6 +37,19 @@ void Minion::trigger(const std::string& eventString) {
 
 void Minion::play() {
     std::cout << "Playing " << getName() << "." << std::endl;
+}
+
+void Minion::useAbility() {
+    if (getAbility()) {
+        std::cout << getName() << " uses its ability: " << ability->getText() << std::endl;
+        ability->useEffect();
+        return;
+    } 
+    std::cout << getName() << " has no ability." << std::endl;
+}
+
+Ability* Minion::getAbility() const {
+    return ability;
 }
 
 Enchantment* Minion::topEnchantment() {
