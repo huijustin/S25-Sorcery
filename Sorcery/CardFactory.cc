@@ -6,6 +6,9 @@
 CardFactory::CardFactory() {
     // Fill master list with one instance of each unique card
 
+    // Create Ability effects
+    // Create Minion Abilities
+
     // Minions                 CardID, Name,        Cost,ATK,Def,Ability,                  Card Text
     masterList.push_back(new Minion(0, "Air Elemental", 0, 1, 1, nullptr, ""));
     masterList.push_back(new Minion(1, "Earth Elemental", 3, 4, 4, nullptr, ""));
