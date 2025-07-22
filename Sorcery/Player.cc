@@ -36,6 +36,10 @@ void Player::endTurn() {
 }
 
 void Player::playCard(int idx) {
+    if (idx < 1 || idx > hand.getSize()) {
+        std::cerr << "Error: Invalid card index." << std::endl;
+        return;
+    }
     Card *c = hand.getCard(idx);
     if (!c) {
         std::cerr << "Error: Invalid card index or Hand is empty" << std::endl;
@@ -45,47 +49,37 @@ void Player::playCard(int idx) {
         std::cerr << "Error: Not enough magic to play this card." << std::endl;
         return;
     }
-    if (idx < 1 || idx > hand.getSize()) {
-        std::cerr << "Error: Invalid card index." << std::endl;
-        return;
-    }
+    // attempt to play the card
+    bool playSuccessful = false;
+
     // Check if the card is a Ritual
     if (Ritual* ritualCard = dynamic_cast<Ritual*>(c)) {
-        if (ritual) {
+        if (this->ritual) {
             std::cerr << "Error: Ritual slot is already occupied." << std::endl;
             return;
         }
-        ritual = ritualCard; // Set the ritual
-        Card *toPlay = hand.removeCard(idx); // Remove from hand
-        ritual->play(); // Play the ritual
-        return;
+        this->ritual = ritualCard; 
+        Card *toPlay = hand.removeCard(idx); 
+        playSuccessful = true;
     }
+
     // Check if the card is a Minion
-    if (Minion* minionCard = dynamic_cast<Minion*>(c)) {
-        if (!board.addMinion(minionCard)) { 
+     else if (Minion* minionCard = dynamic_cast<Minion*>(c)) {
+        if (board.addMinion(minionCard)) {
+            Card *toPlay = hand.removeCard(idx); 
+            playSuccessful = true;
+        } else {
             std::cerr << "Error: Board is full, cannot add minion." << std::endl;
             return;
         }
-        Card *toPlay = hand.removeCard(idx); // Remove from hand
-        minionCard->play(); // Play the minion
-        return;
     }
-    // For other card types, just play the card
-    if (hand.isFull()) {
-        std::cerr << "Error: Hand is full, cannot play this card." << std::endl;
-        return;
-    }
-    // Check if the card is a spell or ability
-    if (c->getCost() > magic) {
-        std::cerr << "Error: Not enough magic to play this card." << std::endl;
-        return;
-    }
-    // Proceed to play the card
-    Card *toPlay = hand.removeCard(idx);
-    spendMagic(c->getCost()); // Deduct magic cost
-    c->play();  
 
-    // TODO: place c on board, graveyard, or ritual slot based on dynamic type
+    // TODO: Handle other card types (Spells, Enchantments, etc.)
+
+    if (playSuccessful) {
+        spendMagic(c->getCost());
+        c->play();
+    }
 }
 
 void Player::attack(int fromIdx, int toIdx) {
@@ -115,7 +109,11 @@ void Player::useAbility(int fromIdx, int targetIdx) {
 void Player::drawCard() {
     if (!hand.isFull() && !deck.isEmpty()) {
         Card* c = deck.draw();
-        hand.addCard(c);
+        if (c) {
+            hand.addCard(c);
+        } else {
+            std::cerr << "Error: Failed to draw card from deck." << std::endl;
+        }
     }
 }
 

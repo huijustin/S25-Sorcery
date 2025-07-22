@@ -1,4 +1,7 @@
 #include "Graveyard.h"
+#include <iostream>
+
+Graveyard::~Graveyard() { for (auto m : minions) delete m; }
 
 void Graveyard::addMinion(Minion *minion) {
     if (!minion) {

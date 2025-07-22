@@ -6,6 +6,7 @@
 class Graveyard {
     std::vector<Minion*> minions;
 public:
+    ~Graveyard();
     // adds minion to top of graveyard
     void addMinion(Minion* minion);
     // returns top minion, nullptr if empty

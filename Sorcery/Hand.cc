@@ -1,4 +1,5 @@
-#include "hand.h"
+#include "Hand.h"
+#include <iostream>
 
 Hand::~Hand() { for (auto c : hand) delete c; }
 
