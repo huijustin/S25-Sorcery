@@ -25,6 +25,7 @@ public:
 
     // public methods
     void startTurn();
+    void endTurn();
     void playCard(int idx);
     void attack(int fromIdx, int toIdx);
     void useAbility(int fromIdx, int targetIdx);

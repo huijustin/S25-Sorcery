@@ -27,7 +27,11 @@ void Player::startTurn() {
     // TODO: trigger "start of turn" effects (rituals, triggers)
 }
 
-void Player::PlayCard(int idx) {
+void Player::endTurn() {
+    // TODO: trigger any “end of turn” ritual or minion triggers
+}
+
+void Player::playCard(int idx) {
     Card* c = hand.removeCard(idx);
     if (!c) {
         std::cerr << "Error: cannot play card" << std::endl;

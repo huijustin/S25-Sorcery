@@ -16,7 +16,6 @@ Card* Hand::removeCard(int i) {
 }
 
 bool isFull() const { return hand.size() >= MAX_SIZE; }
-
 int getSize() const { return Hand.size(); }
 
 Card* Hand::getCard(int i) const {
