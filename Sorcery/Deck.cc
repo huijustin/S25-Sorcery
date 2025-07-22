@@ -32,7 +32,10 @@ void Deck::shuffle() {
 }
 
 Card* Deck::draw() {
-    if (cards.empty()) return nullptr;
+    if (cards.empty()) {
+        std::cerr << "Deck is empty, cannot draw a card." << std::endl;
+        return nullptr;
+    }
     Card* drawnCard = cards.back();
     cards.pop_back();
     return drawnCard;
