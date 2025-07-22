@@ -5,7 +5,7 @@
 
 class Hand {
     std::vector<Card*> hand;
-    static const int MAX_SIZE = 5;
+    static const int MAX_HAND_SIZE = 5;
 public:
     ~Hand();
     // adds card to hand, false if hand is full

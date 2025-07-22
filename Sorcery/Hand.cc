@@ -1,10 +1,10 @@
-#include "Card.h"
+#include "hand.h"
 
 Hand::~Hand() { for (auto c : hand) delete c; }
 
 bool Hand::addCard(Card *card) {
     if (isFull()) return false;
-    Hand.emplace_back(card);
+    hand.emplace_back(card);
     return true;
 }
 
@@ -15,16 +15,16 @@ Card* Hand::removeCard(int i) {
     return c;
 }
 
-bool isFull() const { return hand.size() >= MAX_SIZE; }
-int getSize() const { return Hand.size(); }
+bool Hand::isFull() const { return hand.size() >= MAX_HAND_SIZE; }
+int Hand::getSize() const { return hand.size(); }
 
 Card* Hand::getCard(int i) const {
     if (i > hand.size() || i < 1) {
         return nullptr;
     } else {
-        return Hand[i - 1];
+        return hand[i - 1];
     }
 }
 
-const std::vector<Card*>& getCards() const { return hand; }
+const std::vector<Card*>& Hand::getCards() const { return hand; }
 
