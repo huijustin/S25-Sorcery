@@ -3,7 +3,7 @@
 
 class Spell : public Card {
 public:
+    Spell(int cost);
     void activate();
     void play() override;
-    int getCost() override;
 };

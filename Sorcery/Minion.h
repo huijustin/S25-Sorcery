@@ -4,11 +4,21 @@
 #include <vector>
 
 class Minion : public Card {
+protected:
+    int attack;
+    int defense;
+    int actions;
     std::vector<Enchantment*> enchantments;
 public:
-    void attack(Minion* targetEntity);
+    Minion(int cost, int attack, int defense);
+
+    void attackTarget(Minion* targetEntity);
     void trigger(std::string eventString);
     void play() override;
-    int getCost() override;
     Enchantment* topEnchantment();
+
+    int getAttack() const;
+    int getDefense() const;
+    int getActions() const;
+    void setActions(int a);
 };

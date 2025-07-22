@@ -1,7 +1,11 @@
 #pragma once
+
 class Card {
+protected:
+    int cost;
 public:
-    virtual int getCost() = 0;
+    Card(int cost);         
+    virtual int getCost();   
     virtual void play() = 0;
-    virtual ~Card() {}
+    virtual ~Card();
 };
