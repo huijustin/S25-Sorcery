@@ -14,6 +14,10 @@ public:
     Minion(int ID, std::string name, int cost, int attack, int defense);
 
     void attackTarget(Minion* targetEntity);
+
+    // Minions can take damage from multiple sources so create a takeDamage method
+    void takeDamage(int dmg); 
+
     void trigger(const std::string& eventString);
     void play() override;
 
