@@ -18,6 +18,7 @@ class Player {
     Board board;
     Graveyard graveyard;
     Ritual* ritual;
+    GameEngine* game;
 
 public:
     // ctor

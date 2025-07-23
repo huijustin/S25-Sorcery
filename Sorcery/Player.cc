@@ -1,10 +1,16 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player(const std::string &name, const std::string& deckFile) :
-  name{name}, life{20}, magic{3}, ritual{nullptr} {
+Player::Player(const std::string &name, const std::string& deckFile, GameEngine* game)
+    : name{name}, life{20}, magic{3}, ritual{nullptr}, game{game} {
     deck.load_deck(deckFile);
-    deck.shuffle();
+    if (!game) {
+        std::cerr << "Error: GameEngine pointer is null." << std::endl;
+        throw std::invalid_argument("GameEngine pointer cannot be null");
+    }
+    if (!game->isTestingMode()) {
+        deck.shuffle();
+    }
     for (int i = 0; i < 5; ++i) {
         drawCard();
     }
