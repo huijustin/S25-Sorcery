@@ -2,6 +2,7 @@
 #include "Card.h"
 #include "Enchantment.h"
 #include "Ability.h"
+#include "Player.h"
 #include <vector>
 
 class Minion : public Card {
@@ -18,7 +19,8 @@ protected:
 public:
     Minion(int ID, std::string name, int cost, int attack, int defense, Ability* ability, std::string cardText);
 
-    void attackTarget(Minion* targetEntity);
+    void attackMinion(Minion* targetMinion);
+    void attackPlayer(Player* targetPlayer);
 
     // Minions can take damage from multiple sources so create a takeDamage method
     void takeDamage(int dmg); 

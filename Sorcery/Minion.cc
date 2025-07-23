@@ -5,21 +5,31 @@ Minion::Minion(int ID, std::string name, int cost, int atk, int def, Ability* ab
     : Card(ID, std::move(name), cost, std::move(cardText)), // Card attributes
       attack(atk), defense(def), actions(0), ability(ability) {} // Minion attributes
 
-void Minion::attackTarget(Minion* targetEntity) {
+void Minion::attackMinion(Minion* targetMinion) {
     if (actions <= 0) { return; }
 
-    if (!targetEntity) {
-        std::cerr << "Error: No Target." << std::endl;
+    if (!targetMinion) {
+        std::cerr << "Error: No Minion." << std::endl;
         return;
     }
 
     // Damage handling
-    std::cout << getName() << " deals " << getAttack() << " damage to " << targetEntity->getName() << std::endl;
-    std::cout << targetEntity->getName() << " deals " << targetEntity->getAttack() << " damage to " << getName() << std::endl;
-    targetEntity->takeDamage(attack);
-    takeDamage(targetEntity->getAttack());
+    std::cout << getName() << " deals " << getAttack() << " damage to " << targetMinion->getName() << std::endl;
+    std::cout << targetMinion->getName() << " deals " << targetMinion->getAttack() << " damage to " << getName() << std::endl;
+    targetMinion->takeDamage(getAttack());
+    takeDamage(targetMinion->getAttack());
 
     setActions(0);
+}
+
+void Minion::attackPlayer(Player* targetPlayer) {
+    if (!targetPlayer) {
+        std::cerr << "Error: Null player." << std::endl;
+        return;
+    }
+
+    std::cout << getName() << " deals "  << getAttack()  << " damage to " << targetPlayer->getName() << std::endl;
+    targetPlayer->takeDamage(getAttack());
 }
 
 void Minion::takeDamage(int dmg) {
@@ -27,21 +37,24 @@ void Minion::takeDamage(int dmg) {
 
     if (defense <= 0) {
         std::cout << getName() << " has been destroyed!" << std::endl;
-        // move minion to graveyard and Trigger observer
+
+        // Trigger observer to move minion to graveyard
     }
 }
 
 void Minion::trigger(const std::string& eventString) {
-    std::cout << "Minion triggers event: " << eventString << std::endl;
+    std::cout << "Trigger some event: " << eventString << std::endl;
 }
 
 void Minion::play() {
     std::cout << "Playing " << getName() << "." << std::endl;
+
+    // Code to spend mana from player for playing minion
 }
 
 void Minion::useAbility() {
     if (getAbility()) {
-        std::cout << getName() << " uses its ability: " << ability->getText() << std::endl;
+        std::cout << getName() << " uses its ability: " << ability->getDescription() << std::endl;
         ability->useEffect();
         return;
     } 

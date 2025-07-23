@@ -1,4 +1,4 @@
-#include "Spell.h"
+#include Spell.h
 #include <iostream>
 
 Spell::Spell(int ID, std::string name, int cost)
