@@ -35,6 +35,10 @@ public:
     std::string getName() const;
     int getLife() const;
     int getMagic() const;
+    Graveyard* getGraveyard() const;
+    Ritual* getRitual() const;
+    Board& getBoard() const;
+    Hand& getHand() const;
 
     // for testing
     void setLife(int l);

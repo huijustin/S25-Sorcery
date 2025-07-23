@@ -15,6 +15,10 @@ Player::~Player() { delete ritual; }
 std::string Player::getName() const { return name; }
 int Player::getLife() const { return life; }
 int Player::getMagic() const { return magic; }
+Ritual* Player::getRitual() const { return ritual; }
+Graveyard* Player::getGraveyard() const { return &graveyard; }
+Board& Player::getBoard() const { return board; }
+Hand& Player::getHand() const { return hand; }
 
 // for testing
 void Player::setLife(int l) { life = l; }
