@@ -16,7 +16,7 @@ void Minion::attackTarget(Minion* targetEntity) {
     // Damage handling
     std::cout << getName() << " deals " << getAttack() << " damage to " << targetEntity->getName() << std::endl;
     std::cout << targetEntity->getName() << " deals " << targetEntity->getAttack() << " damage to " << getName() << std::endl;
-    targetEntity->takeDamage(attack);
+    targetEntity->takeDamage(getAttack());
     takeDamage(targetEntity->getAttack());
 
     setActions(0);
@@ -27,12 +27,13 @@ void Minion::takeDamage(int dmg) {
 
     if (defense <= 0) {
         std::cout << getName() << " has been destroyed!" << std::endl;
-        // move minion to graveyard and Trigger observer
+        
+        // Trigger observer to move minion to graveyard
     }
 }
 
 void Minion::trigger(const std::string& eventString) {
-    std::cout << "Minion triggers event: " << eventString << std::endl;
+    std::cout << "Trigger some event: " << eventString << std::endl;
 }
 
 void Minion::play() {
