@@ -2,18 +2,13 @@
 #include "Effect.h"
 #include "Minion.h"
 
-/*
-Should not use targetEntity in the construction of the effect
-targetEntity should be handled during apply()
-*/
 class DamageEffect : public Effect {
-    Minion* targetEntity; 
+    Minion* targetEntity = nullptr;
     int damage;
 
 public:
-    DamageEffect(int damage);
-
-    void selectTarget(Minion* target);
-
+    DamageEffect(int dmg);
     void apply() override;
+    void setTarget(Minion* t) override;
+    bool supportsTarget() const override;
 };
