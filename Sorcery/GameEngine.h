@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMEENGINE
+#define GAMEENGINE
 #include <vector>
 #include <string>
 #include "Player.h"
@@ -23,3 +24,4 @@ public:
     void registerObserver(Observer*);
     void notifyObservers();
 };
+#endif

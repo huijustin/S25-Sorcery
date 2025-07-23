@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPELL
+#define SPELL
 #include "Card.h"
 
 class Spell : public Card {
@@ -7,3 +8,4 @@ public:
     void play() override;
     int getCost() override;
 };
+#endif

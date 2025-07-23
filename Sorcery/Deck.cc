@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-void  GameEngine::load_deck(const std::string& filename) {
+void Deck::load_deck(const std::string& filename) {
     std::ifstream file(filename);
     std::string line;
 
