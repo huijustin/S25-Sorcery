@@ -1,7 +1,10 @@
-#pragma once
+#ifndef GRAPHICVIEW_H
+#define GRAPHICVIEW_H
 #include "Observer.h"
 
 class GraphicView : public Observer {
 public:
-    void update(std::string gameState) override;
+    void notify() override;
 };
+
+#endif
