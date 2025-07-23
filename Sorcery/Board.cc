@@ -1,0 +1,29 @@
+#include "Board.h"
+#include <iostream>
+
+Board::~Board() { for (auto m : minions) delete m; }
+
+bool Board::addMinion(Minion* m) {
+    if (minions.size() >= MAX_MINIONS) {
+        std::cerr << "Board is full, cannot add minion." << std::endl; 
+        return false;  
+    }
+    if (!m) {
+        std::cerr << "Cannot add a null minion to board" << std::endl;
+        return false;
+    }
+    minions.emplace_back(m);
+    return true;
+}
+
+Minion* Board::removeMinion(int idx) {
+    if (idx < 1 || idx > minions.size()) {
+        std::cerr << "Invalid index for removing minion: " << idx << " in Board" << std::endl;
+        return nullptr;
+    }
+    Minion* removed = minions[idx - 1];
+    minions.erase(minions.begin() + (idx - 1));
+    return removed;
+}
+
+const std::vector<Minion*>& Board::getMinions() const { return minions; }

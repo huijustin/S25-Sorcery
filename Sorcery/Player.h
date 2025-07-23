@@ -1,10 +1,13 @@
-#pragma once
+#ifndef PLAYER_H
+#define PLAYER_H
 #include <string>
 #include "Deck.h"
-#include "Board.h"
 #include "Hand.h"
+#include "Board.h"
 #include "Graveyard.h"
 #include "Ritual.h"
+#include "Minion.h"
+#include "Card.h"
 
 class Player {
     std::string name;
@@ -14,11 +17,33 @@ class Player {
     Hand hand;
     Board board;
     Graveyard graveyard;
-    Ritual ritual;
+    Ritual* ritual;
 
 public:
-    int getLife() const;
-    void playCard(int index);
+    // ctor
+    Player(const std::string &name, const std::string& deckFile);
+    ~Player();
+    // public methods
+    void startTurn();
+    void endTurn();
+    void playCard(int idx);
     void attack(int fromIdx, int toIdx);
-    void useAbility(int fromIdx, int toIdx);
+    void useAbility(int fromIdx, int targetIdx);
+    void drawCard();
+
+    // accessors / setters
+    std::string getName() const;
+    int getLife() const;
+    int getMagic() const;
+
+    // for testing
+    void setLife(int l);
+    void setMagic(int m);
+
+    // game actions
+    void takeDamage(int amount);
+    void gainMagic(int amount);
+    void spendMagic(int cost);
 };
+
+#endif
