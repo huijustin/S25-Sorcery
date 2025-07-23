@@ -10,7 +10,7 @@ void DamageEffect::selectTarget(Minion* target) {
 
 void DamageEffect::apply() {
 
-    //Asks for target
+    // TODO: Asks for target
     selectTarget(nullptr); // changes target to selected
 
     if (!targetEntity) {

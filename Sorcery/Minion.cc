@@ -5,21 +5,31 @@ Minion::Minion(int ID, std::string name, int cost, int atk, int def, Ability* ab
     : Card(ID, std::move(name), cost, std::move(cardText)), // Card attributes
       attack(atk), defense(def), actions(0), ability(ability) {} // Minion attributes
 
-void Minion::attackTarget(Minion* targetEntity) {
+void Minion::attackMinion(Minion* targetMinion) {
     if (actions <= 0) { return; }
 
-    if (!targetEntity) {
-        std::cerr << "Error: No Target." << std::endl;
+    if (!targetMinion) {
+        std::cerr << "Error: No Minion." << std::endl;
         return;
     }
 
     // Damage handling
-    std::cout << getName() << " deals " << getAttack() << " damage to " << targetEntity->getName() << std::endl;
-    std::cout << targetEntity->getName() << " deals " << targetEntity->getAttack() << " damage to " << getName() << std::endl;
-    targetEntity->takeDamage(getAttack());
-    takeDamage(targetEntity->getAttack());
+    std::cout << getName() << " deals " << getAttack() << " damage to " << targetMinion->getName() << std::endl;
+    std::cout << targetMinion->getName() << " deals " << targetMinion->getAttack() << " damage to " << getName() << std::endl;
+    targetMinion->takeDamage(getAttack());
+    takeDamage(targetMinion->getAttack());
 
     setActions(0);
+}
+
+void Minion::attackPlayer(Player* targetPlayer) {
+    if (!targetPlayer) {
+        std::cerr << "Error: Null player." << std::endl;
+        return;
+    }
+
+    std::cout << getName() << " deals "  << getAttack()  << " damage to " << targetPlayer->getName() << std::endl;
+    targetPlayer->takeDamage(getAttack());
 }
 
 void Minion::takeDamage(int dmg) {
@@ -27,7 +37,7 @@ void Minion::takeDamage(int dmg) {
 
     if (defense <= 0) {
         std::cout << getName() << " has been destroyed!" << std::endl;
-        
+
         // Trigger observer to move minion to graveyard
     }
 }
