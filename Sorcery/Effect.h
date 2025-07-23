@@ -1,7 +1,7 @@
 #pragma once
-#include "Card.h"
 
-class Enchantment : public Card {
+class Effect {
 public:
+    virtual ~Effect() = default;
     virtual void apply() = 0;
 };

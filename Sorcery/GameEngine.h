@@ -24,4 +24,5 @@ public:
     void registerObserver(Observer*);
     void notifyObservers();
 };
+
 #endif

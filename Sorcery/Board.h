@@ -1,9 +1,19 @@
-#pragma once
+#ifndef BOARD_H
+#define BOARD_H
 #include <vector>
 #include "Minion.h"
 
 class Board {
+    std::vector<Minion*> minions;
+    static const int MAX_MINIONS = 5;
 public:
-    void addMinion(Player* p, Minion* m);
-    void removeMinion(Player* p, int idx);
+    ~Board();
+    // adds a minion to board, false if board is full
+    bool addMinion(Minion* m);
+    Minion* removeMinion(int idx);
+    
+    // accessors
+    const std::vector<Minion*>& getMinions() const;
 };
+
+#endif
