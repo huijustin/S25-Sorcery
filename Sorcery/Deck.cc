@@ -6,6 +6,7 @@
 #include <random>
 #include <chrono>
 
+
 void  Deck::load_deck(const std::string& filename) {
     std::ifstream file(filename);
     std::string line;
