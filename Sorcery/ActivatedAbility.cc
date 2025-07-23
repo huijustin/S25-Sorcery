@@ -1,8 +1,10 @@
 #include "ActivatedAbility.h"
 #include <iostream>
 
+#include "ActivatedAbility.h"
+
 ActivatedAbility::ActivatedAbility(int cost, std::string description, std::unique_ptr<Effect> effect)
-    : cost(cost), description(std::move(description)), effect(std::move(effect)) {}
+    : Ability(std::move(effect), std::move(description)), cost(cost) {}
 
 void ActivatedAbility::useEffect(Minion* target) {
     std::cout << "ActivatedAbility: " << description << std::endl;
@@ -16,10 +18,6 @@ void ActivatedAbility::useEffect(Minion* target) {
     } else {
         std::cerr << "Error: Ability has no effect" << std::endl;
     }
-}
-
-std::string ActivatedAbility::getDescription() const {
-    return description;
 }
 
 int ActivatedAbility::getActivationCost() const {

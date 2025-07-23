@@ -14,8 +14,7 @@ void DamageEffect::setTarget(Minion* target) {
 
 void DamageEffect::apply() {
 
-    // TODO: Asks for target
-    setTarget(nullptr); // changes target to selected
+    setTarget(nullptr); // TODO: In Player, call setTarget if supportsTarget is true.
 
     if (!targetEntity) {
         std::cerr << "Error: No target" << std::endl;

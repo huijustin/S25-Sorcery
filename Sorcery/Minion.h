@@ -31,6 +31,8 @@ public:
     Ability* getAbility() const;
     void useAbility();
 
+    std::unique_ptr<Card> Minion::clone() const;
+
     // Simple Get functions
     int getAttack() const;
     int getDefense() const;

@@ -52,12 +52,18 @@ void Minion::play() {
 
 void Minion::useAbility() {
     if (getAbility()) {
-
-        getAbility()->
-
-
+        // If ability requires a target
+        if (getAbility()->getEffect()->supportsTarget()) {
+            Minion* chosenTarget = nullptr; 
+            
+            // TODO: Implement a way to select target
+            
+            getAbility()->useEffect(chosenTarget);
+        }
+        else {
+            getAbility()->useEffect();
+        }
         std::cout << getName() << " uses its ability: " << ability->getDescription() << std::endl;
-        ability->useEffect();
         return;
     } 
     std::cout << getName() << " has no ability." << std::endl;
@@ -73,6 +79,11 @@ Enchantment* Minion::topEnchantment() {
     }
     return nullptr;
 }
+
+std::unique_ptr<Card> Minion::clone() const {
+    return std::make_unique<Minion>(*this);
+}
+
 int Minion::getAttack() const { return attack; }
 int Minion::getDefense() const { return defense; }
 int Minion::getActions() const { return actions; }

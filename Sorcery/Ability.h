@@ -1,11 +1,19 @@
 #pragma once
-#include <string>
+#include <memory>
+#include "Effect.h"
 #include "Minion.h"
 
 class Ability {
+protected:
+    std::unique_ptr<Effect> effect;
+    std::string description;
+
 public:
+    Ability(std::unique_ptr<Effect> effect);
     virtual ~Ability() = default;
 
-    virtual void useEffect(Minion* target = nullptr) = 0;  // Optional target
-    virtual std::string getDescription() const = 0;
+    virtual void useEffect(class Minion* target = nullptr) = 0;
+
+    Effect* getEffect() const;
+    std::string getDescription() const;
 };
