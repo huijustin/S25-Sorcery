@@ -65,7 +65,7 @@ void TextView::printBoard() const {
     printCardRow(p2_minions);
 
     // Player 2 bottom row (ritual, player card, graveyard)
-    std::vector<card_template_T> p2_bottomRow;
+    std::vector<card_template_t> p2_bottomRow;
     p2_bottomRow.push_back(p2->getRitual() ? p2->getRitual()->getTemplate() :CARD_TEMPLATE_BORDER);
     p2_bottomRow.push_back(CARD_TEMPLATE_EMPTY);
     p2_bottomRow.push_back(display_player_card(p2->getName(), p2->getLife(), p2->getMagic()));
