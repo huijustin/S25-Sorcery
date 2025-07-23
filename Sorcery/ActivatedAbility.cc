@@ -1,8 +1,6 @@
 #include "ActivatedAbility.h"
 #include <iostream>
 
-#include "ActivatedAbility.h"
-
 ActivatedAbility::ActivatedAbility(int cost, std::string description, std::unique_ptr<Effect> effect)
     : Ability(std::move(effect), std::move(description)), cost(cost) {}
 

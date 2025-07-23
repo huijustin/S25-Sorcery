@@ -9,7 +9,7 @@ protected:
     std::string description;
 
 public:
-    Ability(std::unique_ptr<Effect> effect);
+    Ability(std::unique_ptr<Effect> effect, std::string description);
     virtual ~Ability() = default;
 
     virtual void useEffect(class Minion* target = nullptr) = 0;
