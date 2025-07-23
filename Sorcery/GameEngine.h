@@ -11,6 +11,7 @@ class Player;
 class TextView;
 class Card;
 class Minion;
+class GraphicsView;
 
 class GameEngine {
     std::vector<Player*> players;
@@ -23,7 +24,8 @@ class GameEngine {
     CommandParser parserCmd;
 
     std::vector<Observer*> observers;
-    TextView* textView;
+    TextView* textView = nullptr;
+    GraphicsView* graphicsView = nullptr;
 
 
 public:

@@ -79,8 +79,10 @@ void TextView::printBoard() const {
 
 void TextView::printHand(int playerIdx) const {
     Player *player = gamep->getPlayer(playerIdx);
-    if (!player) return;
-
+    if (!player) {
+        std::cerr << "Error: Invalid player, cannot print hand" << std::endl;
+        return;
+    }
     const auto& hand = player->getHand().getCards();
     std::vector<card_template_t> handTemplates;
     for (const auto& card : hand) {
