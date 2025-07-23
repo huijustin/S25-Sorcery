@@ -15,19 +15,24 @@ CardFactory::CardFactory() {
 
     // Create Ability effects
     // Create Minion Abilities
-    // Novice Pyromancer
-    std::unique_ptr<Effect> effect = std::make_unique<DamageEffect>(1); // Creates effect that deals 1 damage
-    Ability* novicePyromancer = new ActivatedAbility(1, "Deal 1 damage", std::make_unique<DamageEffect>(1));
+    
+    Board* boardPlaceholder = nullptr;
 
-    // Minions                 CardID, Name,        Cost,ATK,Def,Ability,                  Card Text
+    // Minions                                   CardID, Name,        Cost,ATK,Def,Ability,                  Card Text
     masterList.emplace_back(std::make_unique<Minion>(0, "Air Elemental", 0, 1, 1, nullptr, ""));
     masterList.emplace_back(std::make_unique<Minion>(1, "Earth Elemental", 3, 4, 4, nullptr, ""));
     masterList.emplace_back(std::make_unique<Minion>(2, "Bone Golem", 2, 1, 3, nullptr, "Gain +1/+1 whenever a minion leaves play"));
     masterList.emplace_back(std::make_unique<Minion>(3, "Fire Elemental", 2, 2, 2, nullptr, "When an opponent's minion enters play, deal 1 damage to it"));
     masterList.emplace_back(std::make_unique<Minion>(4, "Potion Seller", 2, 1, 3, nullptr, "At the end of your turn, all your minions gain +0/+1"));
+        // Novice Pyromancer
+    Ability* novicePyromancer = new ActivatedAbility(1, "Deal 1 damage", std::make_unique<DamageEffect>(1)); // Creates effect that deals 1 damage
     masterList.emplace_back(std::make_unique<Minion>(5, "Novice Pyromancer", 1, 0, 1, novicePyromancer, "Deal 1 damage to target minion"));
-    masterList.emplace_back(std::make_unique<Minion>(6, "Apprentice Summoner", 1, 1, 1, nullptr, "Summon a 1/1 air elemental"));
-    masterList.emplace_back(std::make_unique<Minion>(7, "Master Summoner", 3, 2, 3, nullptr, "Summon up to three 1/1 air elementals"));
+        // Apprentice Summoner
+    Ability* apprenticeSummoner = new ActivatedAbility(1, "Summon 1 Air Elemental", std::make_unique<SummonEffect>(getMasterList()[0], 1, boardPlaceholder));
+    masterList.emplace_back(std::make_unique<Minion>(6, "Apprentice Summoner", 1, 1, 1, apprenticeSummoner, "Summon a 1/1 air elemental"));
+        // Master Summoner
+    Ability* masterSummoner = new ActivatedAbility(1, "Summon 3 Air Elementals", std::make_unique<SummonEffect>(getMasterList()[0], 3, boardPlaceholder));
+    masterList.emplace_back(std::make_unique<Minion>(7, "Master Summoner", 3, 2, 3, masterSummoner, "Summon up to three 1/1 air elementals"));
 
     // Spells
 

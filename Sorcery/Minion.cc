@@ -1,4 +1,7 @@
 #include "Minion.h"
+#include "Effect.h"
+#include "DamageEffect.h"
+#include "SummonEffect.h"
 #include <iostream>
 
 Minion::Minion(int ID, std::string name, int cost, int atk, int def, Ability* ability, std::string cardText)
@@ -51,9 +54,16 @@ void Minion::play() {
 }
 
 void Minion::useAbility() {
-    if (getAbility()) {
+    if (!getAbility()) {
+        std::cout << getName() << " has no ability." << std::endl;
+        return;
+    }
+    Effect* effect = getAbility()->getEffect();
+    
+    // Damage Effect
+    if (auto* dmg = dynamic_cast<DamageEffect*>(effect)) {
         // If ability requires a target
-        if (getAbility()->getEffect()->supportsTarget()) {
+        if (effect->supportsTarget()) {
             Minion* chosenTarget = nullptr; 
             
             // TODO: Implement a way to select target
@@ -64,9 +74,18 @@ void Minion::useAbility() {
             getAbility()->useEffect();
         }
         std::cout << getName() << " uses its ability: " << ability->getDescription() << std::endl;
-        return;
     } 
-    std::cout << getName() << " has no ability." << std::endl;
+
+    // Summon Effect
+    else if (auto* summon = dynamic_cast<SummonEffect*>(effect)) {
+        // TODO: effect->setBoard
+        // apply effect
+    } 
+
+    // Unimplemented
+    else {
+        std::cout << getName() << " has some other effect." << std::endl;
+    }
 }
 
 Ability* Minion::getAbility() const {
