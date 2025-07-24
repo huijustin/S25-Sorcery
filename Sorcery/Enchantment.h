@@ -1,7 +1,19 @@
 #pragma once
-#include "Card.h"
+#include "Minion.h"
 
-class Enchantment : public Card {
+class Enchantment : public Minion {
+protected:
+    Minion* base;
+
 public:
-    virtual void apply() = 0;
+    Enchantment(Minion* base);
+    ~Enchantment() override;
+
+    int getAttack() const override;
+    int getDefense() const override;
+    Minion* top() override; // Access base minion (does NOT delete enchantments from memory)
+    Minion* getBase();  // Access minion with topmost layer removed (does NOT delete enchantments from memory)
+
+    static Minion* removeTopEnchantment(Minion* minion);
+    static Minion* removeAllEnchantments(Minion* minion);
 };

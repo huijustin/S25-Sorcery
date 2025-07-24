@@ -1,13 +1,20 @@
 #pragma once
 #include "Effect.h"
 #include "Minion.h"
-#include <vector>
+#include "Board.h"
+#include <memory>
 
 class SummonEffect : public Effect {
-    Minion* toSummon; // Pointer to the minion to summon
+    Minion* toSummon;
     int amount;
+    Board* summonLocation;
 
 public:
-    SummonEffect(Minion* templateMinion, int amount);
+    SummonEffect(Minion* toSummon, int amount, Board* summonLocation);
+
+    void setBoard(Board* board);
     void apply() override;
+    bool supportsTarget() const override { return false; }
+    virtual std::unique_ptr<Effect> clone() const = 0;
+
 };

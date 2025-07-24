@@ -1,24 +1,31 @@
 #include "SummonEffect.h"
 #include <iostream>
 
-SummonEffect::SummonEffect(Minion* toSummon, int amount)
-    : toSummon(toSummon), amount(amount) {}
+SummonEffect::SummonEffect(Minion* toSummon, int amount, Board* summonLocation)
+    : toSummon(toSummon), amount(amount), summonLocation(summonLocation) {}
 
 void SummonEffect::apply() {
-    if (!toSummon) {
-        std::cerr << "No summon provided" << std::endl;
+    if (!summonLocation || !toSummon) {
+        std::cerr << "Summon Error: Missing board or minion pointer" << std::endl;
         return;
     }
 
-    std::cout << "Summoning " << amount << " " << toSummon->getName() << std::endl;
-
     for (int i = 0; i < amount; ++i) {
-        Minion* copy = new Minion(*toSummon);  // Copy constructor used to clone the minion
+        std::unique_ptr<Minion> newMinion(
+            static_cast<Minion*>(toSummon->clone().release())
+        );
 
-        // Some code to put the minion onto the board in the correct spot
+        // if fail to summon then break
+        if (!summonLocation->addMinion(newMinion.get())) {
+            break;
+        }
 
-        std::cout << "Summoned " << copy->getName() << std::endl;
+        newMinion.release();  // prevent destructor from deleting it
     }
+
+    std::cout << "Summoned " << amount << " " << toSummon->getName() << "(s) to the board." << std::endl;
 }
 
-// Create overload for summoning from graveyard
+void SummonEffect::setBoard(Board* board) {
+    summonLocation = board;
+}

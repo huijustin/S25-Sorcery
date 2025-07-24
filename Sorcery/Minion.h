@@ -14,8 +14,6 @@ protected:
 
     Ability* ability;
 
-    std::vector<Enchantment*> enchantments;
-
 public:
     Minion(int ID, std::string name, int cost, int attack, int defense, Ability* ability, std::string cardText);
 
@@ -28,13 +26,21 @@ public:
     void trigger(const std::string& eventString);
     void play() override;
 
-    Ability* getAbility() const;
-    void useAbility();
+    virtual Ability* getAbility() const;
+
+    // Optional target and baord
+    virtual void useAbility(Minion* target = nullptr, Board* board = nullptr);
+
+    virtual Minion* top();
+
+    virtual void roundStart(); // Run at roundstart to reset actions
+    std::unique_ptr<Card> Minion::clone() const;
 
     // Simple Get functions
-    int getAttack() const;
-    int getDefense() const;
+    virtual int getAttack() const;
+    virtual int getDefense() const;
     int getActions() const;
     void setActions(int a);
+    void useActions(int a);
     Enchantment* topEnchantment();
 };

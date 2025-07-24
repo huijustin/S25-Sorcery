@@ -4,8 +4,8 @@
 void Ritual::trigger(std::string eventString) {
     if (eventString == triggerCondition) {
         if (charges >= activationCost) {
-            charges -= activationCost;
             executeEffect(); // NEED TO USE CORRECT FNCTION IMPLEMENTATION HERE
+            charges -= activationCost;
         }
     }
 }
