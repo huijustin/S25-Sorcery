@@ -115,13 +115,28 @@ void Player::useAbility(int fromIdx, int targetIdx) {
     Minion* m = board.getMinions()[fromIdx - 1];
     // Todo: implement m->activateAbility(target)
 
-    //(if minion->getAbility()->getEffect()->supportsTarget()) {
+    if (minion->getAbility()->getEffect()->supportsTarget()) {
         // the ability needs a target
-    //}
+        if (targetIdx < 1 || targetIdx > board.getMinions().size()) {
+            std::cerr << "Error: Invalid target index" << std::endl;
+            return;
+        }
+        Board opponentBoard = game->getInactivePlayer()->getBoard();
+        Minion* targetMinion = opponentBoard.getMinions()[targetIdx - 1];
+        if (!targetMinion) {
+            std::cerr << "Error: No minion at target index" << std::endl;
+            return;
+        }
+        minion->useAbility(targetMinion, nullptr);
+    }
     // another if to check if its a summon effect
     // if it is supply board
-
-    //minion->useAbility(nullptr, board)
+    else if (minion->getAbility()->getEffect()->isSummonEffect()) {
+        minion->useAbility(nullptr, &board);
+    } else {
+        // no target needed, just use the ability
+        minion->useAbility();
+    }
 }
 
 void Player::drawCard() {

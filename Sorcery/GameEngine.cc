@@ -77,6 +77,11 @@ Player* getActivePlayer() const {
     return players[activePlayer];
 }
 
+Player* GameEngine::getInactivePlayer() const {
+    int inactiveIdx = (activePlayer + 1) % players.size();
+    return getPlayer(inactiveIdx);
+}
+
 bool GameEngine::isTestingMode() const {
     return testingMode;
 }
