@@ -47,4 +47,7 @@ public:
     Enchantment* topEnchantment();
     std::vector<Card*> getEnchantmentStack() const;
     void addEnchantmentCard(std::unique_ptr<Card> spellCard);
+
+    // rendering methods
+    virtual card_template_t getTemplate() const;
 };
