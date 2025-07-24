@@ -6,5 +6,5 @@ public:
     GiantStrengthEnchantment(Minion* baseMinion);
     
     int getAttack() const override;
-    int getDefense() const override;
+    int getDefence() const override;
 };

@@ -11,6 +11,8 @@
 #include "HasteEnchantment.h"
 #include "MagicFatigueEnchantment.h"
 #include "SilenceEnchantment.h"
+#include "Ritual.h"
+#include "DarkRitual.h"
 #include "Minion.h"
 #include "Spell.h"
 #include <memory>
@@ -33,14 +35,14 @@ CardFactory::CardFactory() {
     masterList.emplace_back(std::make_unique<Minion>(3, "Fire Elemental", 2, 2, 2, nullptr, "When an opponent's minion enters play, deal 1 damage to it"));
     masterList.emplace_back(std::make_unique<Minion>(4, "Potion Seller", 2, 1, 3, nullptr, "At the end of your turn, all your minions gain +0/+1"));
         // Novice Pyromancer
-    Ability* novicePyromancer = new ActivatedAbility(1, "Deal 1 damage", std::make_unique<DamageEffect>(1)); // Creates effect that deals 1 damage
-    masterList.emplace_back(std::make_unique<Minion>(5, "Novice Pyromancer", 1, 0, 1, novicePyromancer, "Deal 1 damage to target minion"));
+    auto novicePyromancer = std::make_unique<ActivatedAbility>(1, "Deal 1 damage", std::make_unique<DamageEffect>(1)); // Creates effect that deals 1 damage
+    masterList.emplace_back(std::make_unique<Minion>(5, "Novice Pyromancer", 1, 0, 1, std::move(novicePyromancer), "Deal 1 damage to target minion"));
         // Apprentice Summoner
-    Ability* apprenticeSummoner = new ActivatedAbility(1, "Summon 1 Air Elemental", std::make_unique<SummonEffect>(getMasterList()[0], 1, boardPlaceholder));
-    masterList.emplace_back(std::make_unique<Minion>(6, "Apprentice Summoner", 1, 1, 1, apprenticeSummoner, "Summon a 1/1 air elemental"));
+    auto apprenticeSummoner = std::make_unique<ActivatedAbility>(1, "Summon 1 Air Elemental", std::make_unique<SummonEffect>(getMasterList()[0], 1, boardPlaceholder));
+    masterList.emplace_back(std::make_unique<Minion>(6, "Apprentice Summoner", 1, 1, 1, std::move(apprenticeSummoner), "Summon a 1/1 air elemental"));
         // Master Summoner
-    Ability* masterSummoner = new ActivatedAbility(1, "Summon 3 Air Elementals", std::make_unique<SummonEffect>(getMasterList()[0], 3, boardPlaceholder));
-    masterList.emplace_back(std::make_unique<Minion>(7, "Master Summoner", 3, 2, 3, masterSummoner, "Summon up to three 1/1 air elementals"));
+    auto masterSummoner = std::make_unique<ActivatedAbility>(1, "Summon 3 Air Elementals", std::make_unique<SummonEffect>(getMasterList()[0], 3, boardPlaceholder));
+    masterList.emplace_back(std::make_unique<Minion>(7, "Master Summoner", 3, 2, 3, std::move(masterSummoner), "Summon up to three 1/1 air elementals"));
     
     // Spells
     
@@ -61,8 +63,9 @@ CardFactory::CardFactory() {
     auto silence = std::make_unique<BuffEffect>(&enchantTarget,[](Minion* base) { return new SilenceEnchantment(base); });
     masterList.emplace_back(std::make_unique<Spell>(18,"Silence",1,"Minion cannot use abilities",std::move(silence)));
     
-    // Create Ritual effects
-    // Rituals                CardID, Name, Cost, TriggerCount, Effect,                      Card Text
+    // Rituals
+        // Dark Ritual ID 19
+    masterList.emplace_back(std::make_unique<DarkRitual>());
     // masterList.push_back(new Ritual());
 }
 

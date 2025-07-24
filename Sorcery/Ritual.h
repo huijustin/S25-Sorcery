@@ -1,19 +1,29 @@
 #ifndef RITUAL
 #define RITUAL
+
 #include "Card.h"
+#include <string>
+
+class Player;
 
 class Ritual : public Card {
-private:
+protected:
     int activationCost;
     int charges;
     std::string triggerCondition;
 
 public:
-    void trigger(std::string eventString);
+    Ritual(int id, std::string name, int cost, std::string cardText, int activationCost, int charges, std::string triggerCondition);
+
+    virtual void trigger(const std::string& eventString, Player* player) = 0;
     void play() override;
+    void play(Player* owner);
+
     int getCost() override;
-    int getCharges();
+    int getCharges() const;
+    std::string getTriggerCondition() const;
+
+    std::unique_ptr<Card> clone() const override;
 };
 
 #endif
-

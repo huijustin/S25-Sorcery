@@ -25,3 +25,8 @@ int ActivatedAbility::getActivationCost() const {
 std::unique_ptr<Effect> ActivatedAbility::cloneEffect() const {
     return effect ? effect->clone() : nullptr;
 }
+
+std::unique_ptr<Ability> ActivatedAbility::clone() const {
+    return std::make_unique<ActivatedAbility>(cost, description, cloneEffect());
+}
+

@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <string>
+#include "GameEngine.h"
 #include "Deck.h"
 #include "Hand.h"
 #include "Board.h"
@@ -22,8 +23,8 @@ class Player {
     Deck deck;
     Hand hand;
     Board board;
-    Graveyard graveyard;
-    Ritual* ritual;
+    Graveyard* graveyard;
+    std::unique_ptr<Ritual> ritual;
     GameEngine* game;
 
 public:
@@ -36,7 +37,7 @@ public:
     std::string getName() const;
     int getLife() const;
     int getMagic() const;
-    Graveyard* getGraveyard() const;
+    const Graveyard* getGraveyard() const;
     Ritual* getRitual() const;
     Board& getBoard() const;
     Hand& getHand() const;
@@ -58,6 +59,8 @@ public:
     void useAbility(int idx);
     void useAbility(int idx, Player* target, char cardType);
     void drawCard();
+    void setRitual(std::unique_ptr<Ritual> newRitual);
+
 };
 
 #endif
