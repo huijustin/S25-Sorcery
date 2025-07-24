@@ -142,15 +142,15 @@ std::unique_ptr<Minion> Minion::cloneMinion() const {
 card_template_t Minion::getTemplate() const {
     // check if minion has no ability
     if (!ability) {
-        return display_minion_no_ability(name, cost, attack, defense);
+        return display_minion_no_ability(name, cost, attack, defence);
     } 
 
     // check if minion has activated ability
-    if (auto *act = dynamic_cast<ActivatedAbility*>(ability)) {
+    if (auto *act = dynamic_cast<ActivatedAbility*>(ability.get())) {
         return display_minion_activated_ability(
-            name, cost, attack, defense, act->getActivationCost(), act->getDescription());
+            name, cost, attack, defence, act->getActivationCost(), act->getDescription());
     }
     // else it has a triggered ability
     return display_minion_triggered_ability(
-        name, cost, attack, defense, ability->getDescription());
+        name, cost, attack, defence, ability->getDescription());
 }
