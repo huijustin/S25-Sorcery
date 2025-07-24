@@ -1,6 +1,8 @@
 #include "Player.h"
 #include <iostream>
 
+/* Ctor and Dtor */
+
 Player::Player(const std::string &name, const std::string& deckFile, GameEngine* game)
     : name{name}, life{20}, magic{3}, ritual{nullptr}, game{game} {
     deck.load_deck(deckFile);
@@ -18,6 +20,8 @@ Player::Player(const std::string &name, const std::string& deckFile, GameEngine*
 
 Player::~Player() { delete ritual; }
 
+/* accessors and setters */
+
 std::string Player::getName() const { return name; }
 int Player::getLife() const { return life; }
 int Player::getMagic() const { return magic; }
@@ -34,16 +38,7 @@ void Player::takeDamage(int amount) { life -= amount; }
 void Player::gainMagic(int amount) { magic += amount; }
 void Player::spendMagic(int cost) { magic -= cost; }
 
-
-void Player::startTurn() {
-    gainMagic(1);
-    drawCard();
-    // TODO: trigger "start of turn" effects (rituals, triggers)
-}
-
-void Player::endTurn() {
-    // TODO: trigger any “end of turn” ritual or minion triggers
-}
+/* Player actions */
 
 void Player::playCard(int idx) {
     if (idx < 1 || idx > hand.getSize()) {
@@ -64,12 +59,12 @@ void Player::playCard(int idx) {
 
     // Check if the card is a Ritual
     if (Ritual* ritualCard = dynamic_cast<Ritual*>(c)) {
-        if (this->ritual) {
+        if (ritual) {
             std::cerr << "Error: Ritual slot is already occupied." << std::endl;
             return;
         }
-        this->ritual = ritualCard; 
-        Card *toPlay = hand.removeCard(idx); 
+        toPlay = hand.removeCard(idx); 
+        ritual = ritualCard;
         playSuccessful = true;
     }
 
@@ -84,12 +79,45 @@ void Player::playCard(int idx) {
         }
     }
 
-    // TODO: Handle other card types (Spells, Enchantments, etc.)
+    // else it is a spell
+    else {
+        Card* toPlay = hand.removeCard(idx);
+        if (!toPlay) {
+            std::cerr << "Error: Failed to remove card from hand." << std::endl;
+            return;
+        } else {
+            playSuccessful = true;
+        }
+    }
 
+    // play the card if successful
     if (playSuccessful) {
         spendMagic(c->getCost());
         c->play();
+    } else {
+        std::cerr << "Error: Failed to play card." << std::endl;
+        return;
     }
+}
+
+
+void Player::playCard(int idx, Player* target, char cardType) {
+    if (idx < 1 || idx > hand.getSize()) {
+        std::cerr << "Error: Invalid card index." << std::endl;
+        return;
+    }
+    Card* c = hand.getCard(idx);
+    if (!c) {
+        std::cerr << "Error: Invalid card index or Hand is empty" << std::endl;
+        return;
+    }
+    if (c->getCost() > magic) {
+        std::cerr << "Error: Not enough magic to play this card." << std::endl;
+        return;
+    }
+
+    // TODO: Implement cards that take in target
+
 }
 
 void Player::attack(int fromIdx, int toIdx) {
@@ -97,10 +125,21 @@ void Player::attack(int fromIdx, int toIdx) {
         std::cerr << "Error: Invalid attacker Index" << std::endl;
         return;
     }
+
     Minion* attacker = board.getMinions()[fromIdx - 1];
+    if (!attacker) {
+        std::cerr << "Error: No minion at attacking index" << std::endl;
+        return;
+    }
+
+    Player* opponent = game->getInactivePlayer();
+
     if (toIdx == 0) {
         // attack opposing player
         // TODO: implement in GameEngine context
+        if (opponent) {
+            attacker->attackPlayer(opponent);
+        }
     } else {
         // attack opposing minon
         // TODO: look up opposing player's board and resolve combat
