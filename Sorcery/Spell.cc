@@ -1,14 +1,21 @@
-#include Spell.h
+#include "Spell.h"
 #include <iostream>
 
-Spell::Spell(int ID, std::string name, int cost)
-    : Card(ID, std::move(name), cost) {}
-
-void Spell::activate() {
-    std::cout << getName() << " effect activated!" << std::endl;
-}
+Spell::Spell(int id, std::string name, int cost, std::string text, std::unique_ptr<Effect> effect)
+    : Card(id, std::move(name), cost, std::move(text)), effect(std::move(effect)) {}
 
 void Spell::play() {
-    std::cout << "Playing Spell: " << getName() << std::endl;
-    activate();
+    play(nullptr); // default to no target
+}
+
+void Spell::play(Minion* target) {
+    if (effect) {
+        if (effect->supportsTarget()) {
+            effect->setTarget(target);
+        }
+        effect->apply();
+        std::cout << getName() << " is played: " << cardText << std::endl;
+    } else {
+        std::cerr << "Error: Spell has no effect." << std::endl;
+    }
 }

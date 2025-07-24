@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <memory>
 
 class Card {
 protected:
@@ -16,4 +17,6 @@ public:
     std::string Card::getCardText() const;
     virtual void play() = 0;
     virtual ~Card();
+
+    virtual std::unique_ptr<Card> clone() const = 0; // Required to clone subclasses
 };
