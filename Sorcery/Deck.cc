@@ -8,6 +8,8 @@
 
 
 void  Deck::load_deck(const std::string& filename) {
+    
+    /*
     std::ifstream file(filename);
     std::string line;
 
@@ -22,6 +24,7 @@ void  Deck::load_deck(const std::string& filename) {
     }
 
     file.close();
+    */
 }
 
 Deck::~Deck() { for (auto c : cards) delete c; }

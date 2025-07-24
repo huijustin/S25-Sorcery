@@ -5,7 +5,7 @@ void Ritual::trigger(std::string eventString) {
     if (eventString == triggerCondition) {
         if (charges >= activationCost) {
             charges -= activationCost;
-            executeEffect(); // NEED TO USE CORRECT FNCTION IMPLEMENTATION HERE
+            executeEffect(); // use effect fucntin from effects classes and car factory
         }
     }
 }
