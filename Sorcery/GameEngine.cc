@@ -19,84 +19,94 @@ void GameEngine::run() {
     std::cout << "Game has ended.\n";
 }
 
-void GameEngine::processCommand(std::string cmdString) {
-    Command cmd = parserCmd.parse(cmdString);
+void GameEngine::processCommand(const std::string &input) {
+    std::istringstream iss(input);
+    std::string cmd;
+    std::vector<std::string> args;
 
-    if (cmd.type == "help") {
+    iss >> cmd;
+    std::string arg;
+    while(iss >> arg) {
+        args.push_back(arg);
+    }
+
+    //Command cmd = parserCmd.parse(cmdString);
+
+    if (cmd == "help") {
         displayHelp();
     }
-    else if (cmd.type == "end") {
+    else if (cmd == "end") {
         endTurn();  //NEED TO CHNAGE TO PLAYER ednTurn METHOD
     }
-    else if (cmd.type == "quit") {
+    else if (cmd == "quit") {
         quitGame();
     }
-    else if (cmd.type == "play") {
-        if (cmd.args.size() == 1) {
-            int idx = std::stoi(cmd.args[0]);
+    else if (cmd == "play") {
+        if (args.size() == 1) {
+            int idx = std::stoi(args[0]);
             getActivePlayer()->playCard(idx);
         }
-        else if (cmd.args.size() == 3) {
-            int idx = std::stoi(cmd.args[0]);
-            int targetPlayer = std::stoi(cmd.args[1]);
-            int targetCard = std::stoi(cmd.args[2]);
+        else if (args.size() == 3) {
+            int idx = std::stoi(args[0]);
+            int targetPlayer = std::stoi(args[1]);
+            char targetCard = std::stoi(args[2]);
             getActivePlayer()->playCard(idx, getPlayer(targetPlayer), targetCard);  //NEED AN UPDATED playCard IN PLAYER CLASS
         }
         else {
-            std:cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
+            std::cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
         }
     }
-    else if (cmd.type == "attack") {
-        if (cmd.args.size() == 1) {
-            int attackeridx = std::stoi(cmd.args[0]);
+    else if (cmd == "attack") {
+        if (args.size() == 1) {
+            int attackeridx = std::stoi(args[0]);
             getActivePlayer()->attack(attackeridx, getPlayer(1 - activePlayer));
         }
-        else if (cmd.args.size() == 2) {
-            int attackeridx = std::stoi(cmd.args[0]);
-            int defenderidx = std::stoi(cmd.args[1]);
+        else if (args.size() == 2) {
+            int attackeridx = std::stoi(args[0]);
+            int defenderidx = std::stoi(args[1]);
             getActivePlayer()->attack(attackeridx, getPlayer(1 - activePlayer), defenderidx); //AMKE SURE WE HAVE THE RIGHT PARAMETERS IN ATTACK METHOD
         }
         else {
-            std:cout << "Invalid number of arguments for attack." << std::endl;
+            std::cout << "Invalid number of arguments for attack." << std::endl;
         }
     }
-    else if (cmd.type == "use") {   // Uses Minion Special Ability
-        if (cmd.args.size() == 1) {
-            int minionidx = std::stoi(cmd.args[0]);
+    else if (cmd == "use") {   // Uses Minion Special Ability
+        if (args.size() == 1) {
+            int minionidx = std::stoi(args[0]);
             getActivePlayer()->useAbility(minionidx); // CHECK IF ONE ARGUMENT IS VALID
         }
-        else if (cmd.args.size() == 3) {
-            int minionidx = std::stoi(cmd.args[0]);
-            int targetPlayer = std::stoi(cmd.args[1]);
-            int targetCard = std::stoi(cmd.args[2]);
+        else if (args.size() == 3) {
+            int minionidx = std::stoi(args[0]);
+            int targetPlayer = std::stoi(args[1]);
+            int targetCard = std::stoi(args[2]);
             getActivePlayer()->useAbility(minionidx, getPlayer(targetPlayer), targetCard); // NEED TO CHECK ARGUMENTS
         }
         else {
-            std:cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
+            std::cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
         }
     }
-    else if (cmd.type == "inspect") {       // NHAN TAKING CARE OF THIS CASE
-        if (cmd.args.size() == 1) {
-            int minionidx = std::stoi(cmd.args[0]);
+    else if (cmd == "inspect") {       // NHAN TAKING CARE OF THIS CASE
+        if (args.size() == 1) {
+            int minionidx = std::stoi(args[0]);
             //getActivePlayer()-> // CHECK IF ONE ARGUMENT IS VALID
         }
     }
-    else if (cmd.type == "hand") {
+    else if (cmd == "hand") {
         textView->printHand(activePlayer);
     }
-    else if (cmd.type == "board") {
+    else if (cmd == "board") {
         textView->printBoard();
     }
-    else if (cmd.type == "draw"  && testingMode) {
+    else if (cmd == "draw"  && testingMode) {
         getActivePlayer()->drawCard();
     }
-    else if (cmd.type == "discard" && testingMode) {
-        if (cmd.args.size() == 1) {
-            int idx = std::stoi(cmd.args[0]);
+    else if (cmd == "discard" && testingMode) {
+        if (args.size() == 1) {
+            int idx = std::stoi(args[0]);
             discardCard(idx);
         } 
         else {
-            std:cout << "Invalid number of arguments for attack." << std::endl;
+            std::cout << "Invalid number of arguments for attack." << std::endl;
         }
     }
     else {
@@ -175,15 +185,17 @@ void GameEngine::quitGame() { // go back to main and main will terminate the pro
   gameOver = true;
 }
 
+
 void GameEngine::discardCard(int idx) {
-    if (idx <0 || idx >= getActivePlayer()->getHand().size()) {
-        std::cout << "invalid card index.\n" << std::endl;
+    Card* discardedCard = getActivePlayer()->getHand().removeCard(idx - 1);
+    if (!discardedCard) {
+        std::cout << "Invalid card index.\n";
         return;
     }
-
-    currentPlayer->discardCard(idx);
-    std::cout << "Card Discarded.\n";
+    delete discardedCard;
+    std::cout << "Card discarded.\n";
 }
+
 /*
 void GameEngine::attack(int attackeridx, std::optional<int> targetidx) {
     Player* current = players[activerPlayer];

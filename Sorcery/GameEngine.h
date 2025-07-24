@@ -21,7 +21,7 @@ class GameEngine {
     std::string initFile;
     std::vector<Card*> cardMasterList;
     std::vector<Card*> deckFiles;
-    CommandParser parserCmd;
+    bool gameOver;
 
     std::vector<Observer*> observers;
     TextView* textView = nullptr;
@@ -36,7 +36,7 @@ class GameEngine {
 
 public:
     void run();
-    void processCommand(std::string cmdString);
+    void processCommand(const std::string &input);
     void registerObserver(Observer*);
     void notifyObservers();
 
