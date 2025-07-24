@@ -1,4 +1,5 @@
 #include "Deck.h"
+#include "CardFactory.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -6,25 +7,27 @@
 #include <random>
 #include <chrono>
 
+extern CardFactory cardFactory;
 
 void  Deck::load_deck(const std::string& filename) {
-    
-    /*
     std::ifstream file(filename);
-    std::string line;
-
-    if (!(file.is_open())) {
-        std::cerr << "Could not open deck file: " << filename << std::endl; // Check Error message
+    if (!file) {
+        std::cerr << "Could not open deck file: " << filename << std::endl;
         return;
     }
 
-    while (std::getline(file, line)) {
+    std::string name;
+    while (std::getline(file, name)) {
+        if (name.empty()) continue;
+        std::unique_ptr<Card> card = CardFactory->cloneCardByName(name);
+        if (card) {
+            cards.push_back(card.release());
+        }
+        else {
+            std::cerr << "Unknown card name in deck file: " << name << std::endl;
+        }
 
-        std::cout << "loaded card: " << line << std::endl; // Check message
     }
-
-    file.close();
-    */
 }
 
 Deck::~Deck() { for (auto c : cards) delete c; }
