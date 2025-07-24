@@ -27,7 +27,7 @@ public:
     void play() override;
 
     Ability* getAbility() const;
-    void useAbility();
+    void useAbility(Minion* target = nullptr, Board* board = nullptr);
 
     virtual Minion* top();
 

@@ -53,39 +53,47 @@ void Minion::play() {
     std::cout << "Playing " << getName() << "." << std::endl;
 }
 
-void Minion::useAbility() {
+void Minion::useAbility(Minion* target, Board* board) {
+    // Check for no Ability
     if (!getAbility()) {
         std::cout << getName() << " has no ability." << std::endl;
         return;
     }
     Effect* effect = getAbility()->getEffect();
-    
-    // Damage Effect
-    if (auto* dmg = dynamic_cast<DamageEffect*>(effect)) {
-        // If ability requires a target
-        if (effect->supportsTarget()) {
-            Minion* chosenTarget = nullptr; 
-            
-            // TODO: Implement a way to select target
-            
-            getAbility()->useEffect(chosenTarget);
-        }
-        else {
-            getAbility()->useEffect();
-        }
-        std::cout << getName() << " uses its ability: " << ability->getDescription() << std::endl;
-    } 
-
-    // Summon Effect
-    else if (auto* summon = dynamic_cast<SummonEffect*>(effect)) {
-        // TODO: effect->setBoard
-        // apply effect
-    } 
-
-    // Unimplemented
-    else {
-        std::cout << getName() << " has some other effect." << std::endl;
+    // Check for no effect
+    if (!effect) {
+        std::cerr << "Error: Ability has no effect." << std::endl;
+        return;
     }
+
+    // SummonEffect requires board
+    if (auto* summon = dynamic_cast<SummonEffect*>(effect)) {
+        if (!board) {
+            std::cerr << getName() << "'s summon ability requires a board but none was provided." << std::endl;
+            return;
+        }
+
+        summon->setBoard(board);
+        getAbility()->useEffect();  // Summoned minion is specified on creation of effect
+    }
+    
+    // If the effect requires a minion target
+    else if (effect->supportsTarget()) {
+        if (!target) {
+            std::cerr << getName() << "'s ability needs a target, but none was provided." << std::endl;
+            return;
+        }
+
+        effect->setTarget(target);
+        getAbility()->useEffect(target);
+    }
+
+    // If no target needed
+    else {
+        getAbility()->useEffect();
+    }
+
+    std::cout << getName() << " uses its ability: " << ability->getDescription() << std::endl;
 }
 
 Ability* Minion::getAbility() const {
