@@ -20,13 +20,13 @@ Player::Player(const std::string &name, const std::string& deckFile, GameEngine*
     }
 }
 
-Player::~Player() { delete ritual; }
+Player::~Player() {}
 
 std::string Player::getName() const { return name; }
 int Player::getLife() const { return life; }
 int Player::getMagic() const { return magic; }
-Ritual* Player::getRitual() const { return ritual; }
-Graveyard* Player::getGraveyard() const { return &graveyard; }
+Ritual* Player::getRitual() const { return ritual.get(); }
+const Graveyard* Player::getGraveyard() const { return graveyard; }
 Board& Player::getBoard() const { return board; }
 Hand& Player::getHand() const { return hand; }
 
@@ -42,7 +42,9 @@ void Player::spendMagic(int cost) { magic -= cost; }
 void Player::startTurn() {
     gainMagic(1);
     drawCard();
-    // TODO: trigger "start of turn" effects (rituals, triggers)
+    if (getRitual()) {
+        getRitual()->trigger("Start of Turn", this);
+    }
 }
 
 void Player::endTurn() {
@@ -80,7 +82,7 @@ void Player::playCard(int idx) {
     }
 
     // Check if the card is a Minion
-     else if (Minion* minionCard = dynamic_cast<Minion*>(c)) {
+    else if (Minion* minionCard = dynamic_cast<Minion*>(c)) {
         if (board.addMinion(minionCard)) {
             Card *toPlay = hand.removeCard(idx); 
             playSuccessful = true;

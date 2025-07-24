@@ -4,10 +4,10 @@
 #include "Card.h"
 #include <string>
 
-class Player; // Forward declaration
+class Player;
 
 class Ritual : public Card {
-private:
+protected:
     int activationCost;
     int charges;
     std::string triggerCondition;
@@ -15,7 +15,7 @@ private:
 public:
     Ritual(int id, std::string name, int cost, std::string cardText, int activationCost, int charges, std::string triggerCondition);
 
-    void trigger(std::string eventString);
+    virtual void trigger(const std::string& eventString, Player* player) = 0;
     void play() override;
     void play(Player* owner);
 

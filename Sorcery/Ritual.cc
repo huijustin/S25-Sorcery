@@ -2,9 +2,9 @@
 #include "Player.h"
 #include <iostream>
 
-Ritual::Ritual(int id, std::string name, int cost, std::string cardText, int activationCost, int charges, std::string triggerCondition)
-    : Card(id, std::move(name), cost, std::move(cardText)),
-      activationCost(activationCost), charges(charges), triggerCondition(std::move(triggerCondition)) {}
+Ritual::Ritual(int id, std::string name, int cost, std::string triggerCondition, int charges)
+    : Card(id, name, cost, "Ritual: " + triggerCondition), activationCost(cost), charges(charges),
+      triggerCondition(triggerCondition) {}
 
 void Ritual::play() {
     std::cout << "Error: No player provided to Ritual" << std::endl;

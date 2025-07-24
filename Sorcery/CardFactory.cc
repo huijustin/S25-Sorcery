@@ -11,6 +11,8 @@
 #include "HasteEnchantment.h"
 #include "MagicFatigueEnchantment.h"
 #include "SilenceEnchantment.h"
+#include "Ritual.h"
+#include "DarkRitual.h"
 #include "Minion.h"
 #include "Spell.h"
 #include <memory>
@@ -61,8 +63,9 @@ CardFactory::CardFactory() {
     auto silence = std::make_unique<BuffEffect>(&enchantTarget,[](Minion* base) { return new SilenceEnchantment(base); });
     masterList.emplace_back(std::make_unique<Spell>(18,"Silence",1,"Minion cannot use abilities",std::move(silence)));
     
-    // Create Ritual effects
-    // Rituals                CardID, Name, Cost, TriggerCount, Effect,                      Card Text
+    // Rituals
+        // Dark Ritual ID 19
+    masterList.emplace_back(std::make_unique<DarkRitual>());
     // masterList.push_back(new Ritual());
 }
 

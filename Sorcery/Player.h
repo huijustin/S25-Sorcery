@@ -17,7 +17,7 @@ class Player {
     Deck deck;
     Hand hand;
     Board board;
-    Graveyard graveyard;
+    Graveyard* graveyard;
     std::unique_ptr<Ritual> ritual;
     GameEngine* game;
 
@@ -37,7 +37,7 @@ public:
     std::string getName() const;
     int getLife() const;
     int getMagic() const;
-    Graveyard* getGraveyard() const;
+    const Graveyard* getGraveyard() const;
     Ritual* getRitual() const;
     Board& getBoard() const;
     Hand& getHand() const;
