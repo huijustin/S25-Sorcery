@@ -9,8 +9,8 @@ std::unique_ptr<Card> DarkRitual::clone() const {
 }
 
 void DarkRitual::trigger(const std::string& triggerString, Player* player) {
-    if (eventString == "Start of Turn" && charges > 0 && player) {
-        player->gainMagic(1);  // assumes gainMagic is implemented
+    if (triggerString == "Start of Turn" && charges > 0 && player) {
+        player->gainMagic(1);  
         std::cout << "Dark Ritual triggers: " << player->getName() << " gains +1 magic." << std::endl;
     }
 }
