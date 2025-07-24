@@ -22,7 +22,7 @@ void Minion::attackMinion(Minion* targetMinion) {
     targetMinion->takeDamage(getAttack());
     takeDamage(targetMinion->getAttack());
 
-    setActions(0);
+    useActions(1);
 }
 
 void Minion::attackPlayer(Player* targetPlayer) {
@@ -54,6 +54,8 @@ void Minion::play() {
 }
 
 void Minion::useAbility(Minion* target, Board* board) {
+    if (actions <= 0) { return; }
+
     // Check for no Ability
     if (!getAbility()) {
         std::cout << getName() << " has no ability." << std::endl;
@@ -92,7 +94,7 @@ void Minion::useAbility(Minion* target, Board* board) {
     else {
         getAbility()->useEffect();
     }
-
+    useActions(1);
     std::cout << getName() << " uses its ability: " << ability->getDescription() << std::endl;
 }
 
@@ -104,6 +106,10 @@ Minion* Minion::top() {
     return this;
 }
 
+void Minion::roundStart() {
+    if (getActions() <= 0) { setActions(1); }
+}
+
 std::unique_ptr<Card> Minion::clone() const {
     return std::make_unique<Minion>(*this);
 }
@@ -112,3 +118,4 @@ int Minion::getAttack() const { return attack; }
 int Minion::getDefense() const { return defense; }
 int Minion::getActions() const { return actions; }
 void Minion::setActions(int a) { actions = a; }
+void Minion::useActions(int a) { if (actions >= a ) { actions -= a; }}

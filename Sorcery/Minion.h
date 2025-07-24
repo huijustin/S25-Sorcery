@@ -27,10 +27,13 @@ public:
     void play() override;
 
     Ability* getAbility() const;
+
+    // Optional target and baord
     void useAbility(Minion* target = nullptr, Board* board = nullptr);
 
     virtual Minion* top();
 
+    virtual void roundStart(); // Run at roundstart to reset actions
     std::unique_ptr<Card> Minion::clone() const;
 
     // Simple Get functions
@@ -38,5 +41,6 @@ public:
     virtual int getDefense() const;
     int getActions() const;
     void setActions(int a);
+    void useActions(int a);
     Enchantment* topEnchantment();
 };
