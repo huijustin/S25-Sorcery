@@ -2,6 +2,7 @@
 #include "Spell.h"
 #include "BuffEffect.h"
 #include "SummonEffect.h"
+#include <utility>
 #include <iostream>
 
 Player::Player(const std::string &name, const std::string& deckFile, GameEngine* game)
@@ -67,12 +68,14 @@ void Player::playCard(int idx) {
 
     // Check if the card is a Ritual
     if (Ritual* ritualCard = dynamic_cast<Ritual*>(c)) {
-        if (this->ritual) {
-            std::cerr << "Error: Ritual slot is already occupied." << std::endl;
-            return;
+        if (ritual) {
+            std::cout << "Replacing existing ritual: " << ritual->getName() << std::endl;
+            ritual.reset();
         }
-        this->ritual = ritualCard; 
-        Card *toPlay = hand.removeCard(idx); 
+
+        ritualCard->play(this); 
+        hand.removeCard(idx);
+        spendMagic(c->getCost());
         playSuccessful = true;
     }
 
@@ -191,3 +194,6 @@ void Player::drawCard() {
     }
 }
 
+void Player::setRitual(std::unique_ptr<Ritual> newRitual) {
+    ritual = std::move(newRitual);
+}

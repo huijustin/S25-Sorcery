@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <string>
+#include "GameEngine.h"
 #include "Deck.h"
 #include "Hand.h"
 #include "Board.h"
@@ -17,7 +18,7 @@ class Player {
     Hand hand;
     Board board;
     Graveyard graveyard;
-    Ritual* ritual;
+    std::unique_ptr<Ritual> ritual;
     GameEngine* game;
 
 public:
@@ -49,6 +50,8 @@ public:
     void takeDamage(int amount);
     void gainMagic(int amount);
     void spendMagic(int cost);
+    void setRitual(std::unique_ptr<Ritual> newRitual);
+
 };
 
 #endif
