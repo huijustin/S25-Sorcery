@@ -47,4 +47,6 @@ public:
     Enchantment* topEnchantment();
     std::vector<Card*> getEnchantmentStack() const;
     void addEnchantmentCard(std::unique_ptr<Card> spellCard);
+
+    virtual std::unique_ptr<Minion> cloneMinion() const;
 };

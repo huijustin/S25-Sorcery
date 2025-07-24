@@ -132,3 +132,7 @@ int Minion::getDefence() const { return defence; }
 int Minion::getActions() const { return actions; }
 void Minion::setActions(int a) { actions = a; }
 void Minion::useActions(int a) { if (actions >= a ) { actions -= a; }}
+
+std::unique_ptr<Minion> Minion::cloneMinion() const {
+    return std::make_unique<Minion>(cardID,name,cost,attack,defence,ability ? ability->clone() : nullptr,cardText);
+}

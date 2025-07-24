@@ -14,9 +14,9 @@ class Player {
     std::string name;
     int life;
     int magic;
-    Deck deck;
-    Hand hand;
-    Board board;
+    Deck* deck;
+    Hand* hand;
+    Board* board;
     Graveyard* graveyard;
     std::unique_ptr<Ritual> ritual;
     GameEngine* game;
@@ -39,8 +39,8 @@ public:
     int getMagic() const;
     const Graveyard* getGraveyard() const;
     Ritual* getRitual() const;
-    Board& getBoard() const;
-    Hand& getHand() const;
+    Board* getBoard() const;
+    Hand* getHand() const;
 
     // for testing
     void setLife(int l);
