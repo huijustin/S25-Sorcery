@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-void GameEngine::run() { // Check if we need GameEngiene Method
+void GameEngine::run() {
     activePlayer = 0;
     players[activePlayer]->startTurn();
     notifyObservers();
