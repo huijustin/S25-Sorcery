@@ -27,6 +27,12 @@ class GameEngine {
     TextView* textView = nullptr;
     GraphicsView* graphicsView = nullptr;
 
+    void displayHelp();
+    void endTurn();
+    void quitGame();
+    void playCard(int idx);
+    void attack();
+    void discardCard(int idx);
 
 public:
     void run();
