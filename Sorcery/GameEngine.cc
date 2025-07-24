@@ -1,29 +1,28 @@
 #include <GameEngine.h>
-#include <iostream>  // CHeck if incldues shoudl go in .h or stay in .cc
+#include <TextView.h>
+#include <iostream> 
 #include <fstream>
 #include <sstream>
 
-GameEngine::run() { // Check if we need GameEngiene Method
-    std::cout << "starting Game Engine " << std::endl;  // CHECK STD::
+void GameEngine::run() { // Check if we need GameEngiene Method
+    activePlayer = 0;
+    players[activePlayer]->startTurn();
+    notifyObservers();
 
-   activePlayer = 0;    //Initializes the active Player
-
-   initializeGame();    // Initializes players
-
-   if (!initFile.empty()) {
-    loadInitializationFile();
-   }
-
-   gameLoop;    // Main game loop
-
-   std::cout << "Game ended." < std::endl;  // CHECK STD::
+    std::string cmdstring;
+    while (!gameOver && std::getline(std::cin, cmdstring)) {
+        if (!cmdstring.empty()) {
+            processCommand(cmdstring);
+        }
+    }
+    std::cout << "Game has ended.\n";
 }
 
 void processCommand(std::string cmdString) {
     Command cmd = parserCmd.parse(cmdString);
 
     if (cmd.type == "help") {
-        displayHelp();  // WHAT IS THE HELP MESSAGE
+        displayHelp();
     }
     else if (cmd.type == "end") {
         endTurn();
@@ -32,10 +31,10 @@ void processCommand(std::string cmdString) {
         quitGame();
     }
     else if (cmd.type == "play") {
-        playCard();  // CHECK WITH GROUP
+        Player.playCard(idx);  // CHECK WITH GROUP
     }
     else if (cmd.type == "attack") {
-        attackMinion(); // CHECK WITH GROUP
+       attack(); // CHECK WITH GROUP
     }
     else if (cmd.type == "use") {
         useMinion(); // CHECK WITH GROUP
@@ -44,10 +43,10 @@ void processCommand(std::string cmdString) {
         inspectMinion(); // CHECK WITH GROUP
     }
     else if (cmd.type == "hand") {
-        displayHand(); // CHECK WITH GROUP
+        printHand(); // CHECK WITH GROUP
     }
     else if (cmd.type == "board") {
-        displayBoard(); // CHECK WITH GROUP
+        printBoard(); // CHECK WITH GROUP
     }
     else if (cmd.type == "draw"  && testingMode) {
         inspectMinion(); // CHECK WITH GROUP
@@ -102,5 +101,56 @@ void GameEngine::detach(Observer* o) {
 void GameEngine::notifyObservers() {
     for (auto observer : observers) {
         observer->notify();
+    }
+}
+
+void GameEngine::displayHelp() {
+    std::cout << " Commands:\n"
+    << " help -- Display this message.\n"
+    << "end -- End the current player’s turn.\n"
+    << "quit -- End the game.\n"
+    << "attack minion other-minion -- Orders minion to attack other-minion.\n"
+    << "attack minion -- Orders minion to attack the opponent.\n"
+    << "play card [target-player target-card] -- Play card, optionally targeting target-card owned by target-player.\n"
+    << "use minion [target-player target-card] -- Use minion’s special ability, optionally targeting target-card owned by target-player.\n"
+    << "inspect minion -- View a minion’s card and all enchantments on that minion.\n"
+    << "hand -- Describe all cards in your hand.\n"
+    << "board -- Describe all cards on the board.\n"
+    << std::endl; 
+}
+
+void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basis
+    players[activePlayer]->endTurn();
+    if (activePlayer == 1) {
+        activePlayer = 0;
+    }
+    else {
+        activePlayer = 1;
+    }
+    players[activePlayer]->startTurn();
+} 
+
+void GameEngine::quitGame() { // go back to main and main will terminate the program
+  gameOver = true;
+}
+
+void GameEngine::discardCard(int idx) {
+    if (idx <0 || idx >= currentPlayer->getHand().size()) {
+        std::cout << "invalid card inde.\n";
+        return;
+    }
+
+    currentPlayer->discardCard(idx);
+    std::cout << "Card Discarded.\n";
+}
+
+void GameEngine::attack(int attackeridx, std::optional<int> targetidx) {
+    Player* current = players[activerPlayer];
+    Player* opponent = players[1 - activePlayer];
+
+    Minion* attacker = current->getMinion(attackeridx);
+    if (!attacker) {
+        std::cout << "Invalid attacking minion index." << std::endl;
+        
     }
 }
