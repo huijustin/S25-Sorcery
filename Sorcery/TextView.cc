@@ -1,4 +1,6 @@
 #include "TextView.h"
+#include "Card.h"
+#include <algorithm>
 
 // helper function to print a row of cards sid by side
 void printCardRow(const std::vector<card_template_t>& cards) {
@@ -78,7 +80,7 @@ void TextView::printBoard() const {
 }
 
 void TextView::printHand(int playerIdx) const {
-    Player *player = gamep->getPlayer(playerIdx);
+    Player *player = game->getPlayer(playerIdx);
     if (!player) {
         std::cerr << "Error: Invalid player, cannot print hand" << std::endl;
         return;
@@ -93,20 +95,30 @@ void TextView::printHand(int playerIdx) const {
 
 void TextView::inspectMinion(int playerIdx, int minionIdx) const {
     Player* player = game->getPlayer(playerIdx);
-    if (!player || minion_idx < 1 || minion > 5) {
+    if (!player || minionIdx < 1 || minionIdx > 5) {
         std::cerr << "Error: Invalid player or minion index." << std::endl;
         return;
     }
 
-    const auto& minion = player->getBoard().getMinions(minionIdx - 1);
+    const auto& minion = player->getBoard().getMinions()[minionIdx - 1];
     if (!minion) {
         std::cerr << "Error: No minion at index " << minionIdx << std::endl;
         return;
     }
     printCardRow({minion->getTemplate()});
 
-    // Print enchantments
+    Minion* current = minion;
+    // Collect enchantments from base to top
+    std::vector<Card*> enchantmentStack = minion->getEnchantmentStack();
 
+    // Print each enchantment in rows of 5
+    for (size_t i = 0; i < enchantmentStack.size(); i += 5) {
+        std::vector<Card*> row;
+        for (size_t j = i; j < i + 5 && j < enchantmentStack.size(); ++j) {
+            row.push_back(enchantmentStack[j]->getTemplate());
+        }
+        printCardRow(row);
+    }
 }
 
 void TextView::notify() {

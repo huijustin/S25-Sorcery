@@ -1,4 +1,7 @@
 #include "Player.h"
+#include "Spell.h"
+#include "BuffEffect.h"
+#include "SummonEffect.h"
 #include <iostream>
 
 Player::Player(const std::string &name, const std::string& deckFile, GameEngine* game)
@@ -84,6 +87,44 @@ void Player::playCard(int idx) {
         }
     }
 
+    // Check if its a spell card
+    else if (Spell* spellCard = dynamic_cast<Spell*>(c)) {
+        Effect* effect = spellCard->getEffect();
+
+        // Check if it's an enchantment
+        if (BuffEffect* buff = dynamic_cast<BuffEffect*>(effect)) {
+            Minion* targetMinion = nullptr;  
+            
+            // TODO:
+            // Define how target is selected
+            //
+
+            if (!targetMinion) {
+                std::cerr << "Error: No valid target selected for enchantment." << std::endl;
+                return;
+            }
+
+            // Apply the buff
+            buff->setTarget(targetMinion);
+            buff->apply();
+
+            // Record the spell card on the minion
+            targetMinion->addEnchantmentCard(c->clone());
+
+            // Remove spell from hand
+            Card* toPlay = hand.removeCard(idx);
+            playSuccessful = true;
+
+            std::cout << "Applied enchantment spell: " << c->getName() << " to " << targetMinion->getName() << std::endl;
+        } 
+        // else
+        else {
+
+        }
+    }
+
+
+
     // TODO: Handle other card types (Spells, Enchantments, etc.)
 
     if (playSuccessful) {
@@ -112,7 +153,7 @@ void Player::useAbility(int fromIdx, int targetIdx) {
         std::cerr << "Error: Invalid attacking minion index" << std::endl;
         return;
     }
-    Minion* m = board.getMinions()[fromIdx - 1];
+    Minion* minion = board.getMinions()[fromIdx - 1];
     // Todo: implement m->activateAbility(target)
 
     if (minion->getAbility()->getEffect()->supportsTarget()) {
@@ -131,7 +172,7 @@ void Player::useAbility(int fromIdx, int targetIdx) {
     }
     // another if to check if its a summon effect
     // if it is supply board
-    else if (minion->getAbility()->getEffect()->isSummonEffect()) {
+    else if (auto* summonEffect = dynamic_cast<SummonEffect*>(minion->getAbility()->getEffect())) {
         minion->useAbility(nullptr, &board);
     } else {
         // no target needed, just use the ability

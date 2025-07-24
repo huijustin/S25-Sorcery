@@ -19,3 +19,7 @@ void Spell::play(Minion* target) {
         std::cerr << "Error: Spell has no effect." << std::endl;
     }
 }
+
+Effect* Spell::getEffect() const {
+    return effect.get();
+}
