@@ -114,6 +114,14 @@ void Player::useAbility(int fromIdx, int targetIdx) {
     }
     Minion* m = board.getMinions()[fromIdx - 1];
     // Todo: implement m->activateAbility(target)
+
+    //(if minion->getAbility()->getEffect()->supportsTarget()) {
+        // the ability needs a target
+    //}
+    // another if to check if its a summon effect
+    // if it is supply board
+
+    //minion->useAbility(nullptr, board)
 }
 
 void Player::drawCard() {

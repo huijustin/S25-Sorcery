@@ -41,7 +41,7 @@ CardFactory::CardFactory() {
         // Master Summoner
     Ability* masterSummoner = new ActivatedAbility(1, "Summon 3 Air Elementals", std::make_unique<SummonEffect>(getMasterList()[0], 3, boardPlaceholder));
     masterList.emplace_back(std::make_unique<Minion>(7, "Master Summoner", 3, 2, 3, masterSummoner, "Summon up to three 1/1 air elementals"));
-
+    
     // Spells
     
     // Enchantment (Effectively the same as spell cards)

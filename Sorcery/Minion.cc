@@ -53,6 +53,9 @@ void Minion::play() {
     std::cout << "Playing " << getName() << "." << std::endl;
 }
 
+
+
+
 void Minion::useAbility(Minion* target, Board* board) {
     if (actions <= 0) { return; }
 
