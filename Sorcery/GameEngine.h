@@ -36,6 +36,7 @@ public:
 
     Player* getPlayer(int idx) const;
     Player* getActivePlayer() const;
+    Player* getInactivePlayer() const;
     bool isTestingMode() const;
 
     // Observer methods
