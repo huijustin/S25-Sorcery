@@ -12,47 +12,92 @@ void GameEngine::run() { // Check if we need GameEngiene Method
     std::string cmdstring;
     while (!gameOver && std::getline(std::cin, cmdstring)) {
         if (!cmdstring.empty()) {
-            processCommand(cmdstring);
+            this->processCommand(cmdstring);
         }
     }
+    // DO WE NEED TO CHECK IF GAME HAS ENDED
     std::cout << "Game has ended.\n";
 }
 
-void processCommand(std::string cmdString) {
+void GameEngine::processCommand(std::string cmdString) {
     Command cmd = parserCmd.parse(cmdString);
 
     if (cmd.type == "help") {
         displayHelp();
     }
     else if (cmd.type == "end") {
-        endTurn();
+        endTurn();  //NEED TO CHNAGE TO PLAYER ednTurn METHOD
     }
     else if (cmd.type == "quit") {
         quitGame();
     }
     else if (cmd.type == "play") {
-        Player.playCard(idx);  // CHECK WITH GROUP
+        if (cmd.args.size() == 1) {
+            int idx = std::stoi(cmd.args[0]);
+            getActivePlayer()->playCard(idx);
+        }
+        else if (cmd.args.size() == 3) {
+            int idx = std::stoi(cmd.args[0]);
+            int targetPlayer = std::stoi(cmd.args[1]);
+            int targetCard = std::stoi(cmd.args[2]);
+            getActivePlayer()->playCard(idx, getPlayer(targetPlayer), targetCard);  //NEED AN UPDATED playCard IN PLAYER CLASS
+        }
+        else {
+            std:cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
+        }
     }
     else if (cmd.type == "attack") {
-       attack(); // CHECK WITH GROUP
+        if (cmd.args.size() == 1) {
+            int attackeridx = std::stoi(cmd.args[0]);
+            getActivePlayer()->attack(attackeridx, getPlayer(1 - activePlayer));
+        }
+        else if (cmd.args.size() == 2) {
+            int attackeridx = std::stoi(cmd.args[0]);
+            int defenderidx = std::stoi(cmd.args[1]);
+            getActivePlayer()->attack(attackeridx, getPlayer(1 - activePlayer), defenderidx); //AMKE SURE WE HAVE THE RIGHT PARAMETERS IN ATTACK METHOD
+        }
+        else {
+            std:cout << "Invalid number of arguments for attack." << std::endl;
+        }
     }
-    else if (cmd.type == "use") {
-        useMinion(); // CHECK WITH GROUP
+    else if (cmd.type == "use") {   // Uses Minion Special Ability
+        if (cmd.args.size() == 1) {
+            int minionidx = std::stoi(cmd.args[0]);
+            getActivePlayer()->useAbility(minionidx); // CHECK IF ONE ARGUMENT IS VALID
+        }
+        else if (cmd.args.size() == 3) {
+            int minionidx = std::stoi(cmd.args[0]);
+            int targetPlayer = std::stoi(cmd.args[1]);
+            int targetCard = std::stoi(cmd.args[2]);
+            getActivePlayer()->useAbility(minionidx, getPlayer(targetPlayer), targetCard); // NEED TO CHECK ARGUMENTS
+        }
+        else {
+            std:cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
+        }
     }
-    else if (cmd.type == "inspect") {
-        inspectMinion(); // CHECK WITH GROUP
+    else if (cmd.type == "inspect") {       // NHAN TAKING CARE OF THIS CASE
+        if (cmd.args.size() == 1) {
+            int minionidx = std::stoi(cmd.args[0]);
+            //getActivePlayer()-> // CHECK IF ONE ARGUMENT IS VALID
+        }
     }
     else if (cmd.type == "hand") {
-        printHand(); // CHECK WITH GROUP
+        textView->printHand(activePlayer);
     }
     else if (cmd.type == "board") {
-        printBoard(); // CHECK WITH GROUP
+        textView->printBoard();
     }
     else if (cmd.type == "draw"  && testingMode) {
-        inspectMinion(); // CHECK WITH GROUP
+        getActivePlayer()->drawCard();
     }
     else if (cmd.type == "discard" && testingMode) {
-       discardCard(); // CHECK WITH GROUP
+        if (cmd.args.size() == 1) {
+            int idx = std::stoi(cmd.args[0]);
+            discardCard(idx);
+        } 
+        else {
+            std:cout << "Invalid number of arguments for attack." << std::endl;
+        }
     }
     else {
         std::cout << "Invalid command" << std::endl;
@@ -68,7 +113,7 @@ Player* GameEngine::getPlayer(int idx) const {
     return players[idx];
 }
 
-Player* getActivePlayer() const {
+Player* GameEngine::getActivePlayer() const {
     if (activePlayer < 0 || activePlayer >= players.size()) {
         std::cerr << "Invalid active player index: " << activePlayer << std::endl;
         return nullptr;
@@ -113,7 +158,7 @@ void GameEngine::displayHelp() {
     << "board -- Describe all cards on the board.\n"
     << std::endl; 
 }
-
+/*
 void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basis
     players[activePlayer]->endTurn();
     if (activePlayer == 1) {
@@ -124,21 +169,22 @@ void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basi
     }
     players[activePlayer]->startTurn();
 } 
+*/
 
 void GameEngine::quitGame() { // go back to main and main will terminate the program
   gameOver = true;
 }
 
 void GameEngine::discardCard(int idx) {
-    if (idx <0 || idx >= currentPlayer->getHand().size()) {
-        std::cout << "invalid card inde.\n";
+    if (idx <0 || idx >= getActivePlayer()->getHand().size()) {
+        std::cout << "invalid card index.\n" << std::endl;
         return;
     }
 
     currentPlayer->discardCard(idx);
     std::cout << "Card Discarded.\n";
 }
-
+/*
 void GameEngine::attack(int attackeridx, std::optional<int> targetidx) {
     Player* current = players[activerPlayer];
     Player* opponent = players[1 - activePlayer];
@@ -146,6 +192,26 @@ void GameEngine::attack(int attackeridx, std::optional<int> targetidx) {
     Minion* attacker = current->getMinion(attackeridx);
     if (!attacker) {
         std::cout << "Invalid attacking minion index." << std::endl;
-        
+        return;
     }
+
+    if (!attacker->canAttack()) {
+        std::cout << "this minion cannot attack right now." << std::endl;
+        return;
+    }
+
+    if (targetidx.has_value()) {
+        Minion* target = opponent->getMinion(targetidx.value());
+        if (!target) {
+            std:cout << "invalid target minion." << std::endl;
+            return;
+        }
+        attacker->attack(target); // Attacks minion
+    }
+    else {
+        attacker->attack(opponent); // Directly attacks the player
+    }
+   
+    notifyObservers();
 }
+ */
