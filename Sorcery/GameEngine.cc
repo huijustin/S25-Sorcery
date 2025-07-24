@@ -181,7 +181,7 @@ void GameEngine::quitGame() { // go back to main and main will terminate the pro
 
 
 void GameEngine::discardCard(int idx) {
-    Card* discardedCard = getActivePlayer()->getHand().removeCard(idx - 1);
+    Card* discardedCard = getActivePlayer()->getHand()->removeCard(idx - 1);
     if (!discardedCard) {
         std::cout << "Invalid card index.\n";
         return;

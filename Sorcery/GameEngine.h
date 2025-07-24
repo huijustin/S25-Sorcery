@@ -27,6 +27,7 @@ class GameEngine {
     GraphicsView* graphicsView = nullptr;
 
     void displayHelp();
+    void startTurn();
     void endTurn();
     void quitGame();
     void playCard(int idx);
