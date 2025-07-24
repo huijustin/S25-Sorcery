@@ -43,4 +43,7 @@ public:
     void setActions(int a);
     void useActions(int a);
     Enchantment* topEnchantment();
+
+    // rendering methods
+    virtual card_template_t getTemplate() const;
 };

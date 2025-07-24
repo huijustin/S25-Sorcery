@@ -2,6 +2,8 @@
 #include "Effect.h"
 #include "DamageEffect.h"
 #include "SummonEffect.h"
+#include "ActivatedAbility.h"
+#include "ascii_graphics.h"
 #include <iostream>
 
 Minion::Minion(int ID, std::string name, int cost, int atk, int def, Ability* ability, std::string cardText)
@@ -122,3 +124,19 @@ int Minion::getDefense() const { return defense; }
 int Minion::getActions() const { return actions; }
 void Minion::setActions(int a) { actions = a; }
 void Minion::useActions(int a) { if (actions >= a ) { actions -= a; }}
+
+card_template_t Minion::getTemplate() const {
+    // check if minion has no ability
+    if (!ability) {
+        return display_minion_no_ability(name, cost, attack, defense);
+    } 
+
+    // check if minion has activated ability
+    if (auto *act = dynamic_cast<ActivatedAbility*>(ability)) {
+        return display_minion_activated_ability(
+            name, cost, attack, defense, act->getActivationCost(), act->getDescription());
+    }
+    // else it has a triggered ability
+    return display_minion_triggered_ability(
+        name, cost, attack, defense, ability->getDescription());
+}
