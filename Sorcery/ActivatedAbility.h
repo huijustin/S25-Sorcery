@@ -12,4 +12,7 @@ public:
 
     void useEffect(Minion* target = nullptr) override;
     int getActivationCost() const;
+
+    std::unique_ptr<Effect> cloneEffect() const; // To avoid sharing pointers between abilities
+
 };

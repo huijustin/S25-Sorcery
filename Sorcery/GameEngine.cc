@@ -61,12 +61,41 @@ void processCommand(std::string cmdString) {
     notifyObservers();
 }
 
+Player* GameEngine::getPlayer(int idx) const {
+    if (idx < 0 || idx >= players.size()) {
+        std::cerr << "Invalid player index: " << idx << std::endl;
+        return nullptr;
+    }
+    return players[idx];
+}
 
+Player* getActivePlayer() const {
+    if (activePlayer < 0 || activePlayer >= players.size()) {
+        std::cerr << "Invalid active player index: " << activePlayer << std::endl;
+        return nullptr;
+    }
+    return players[activePlayer];
+}
 
-void registerObserver(Observer* observer) {
-    if (observer != nullptr) {
-        observers.push_back(observer)
-        std::cout << "Observer registered succesfully." << std::endl;
+bool GameEngine::isTestingMode() const {
+    return testingMode;
+}
+
+void GameEngine::attach(Observer* o) {
+    observers.push_back(o);
+}
+
+void GameEngine::detach(Observer* o) {
+    for (auto it = observers.begin(); it != observers.end(); ++it) {
+        if (*it == o) {
+            observers.erase(it);
+            return;
+        }
     }
 }
-void notifyObservers();
+
+void GameEngine::notifyObservers() {
+    for (auto observer : observers) {
+        observer->notify();
+    }
+}

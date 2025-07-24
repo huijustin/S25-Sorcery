@@ -18,10 +18,11 @@ class Player {
     Board board;
     Graveyard graveyard;
     Ritual* ritual;
+    GameEngine* game;
 
 public:
     // ctor
-    Player(const std::string &name, const std::string& deckFile);
+    Player(const std::string &name, const std::string& deckFile, GameEngine* game);
     ~Player();
     // public methods
     void startTurn();
@@ -35,6 +36,10 @@ public:
     std::string getName() const;
     int getLife() const;
     int getMagic() const;
+    Graveyard* getGraveyard() const;
+    Ritual* getRitual() const;
+    Board& getBoard() const;
+    Hand& getHand() const;
 
     // for testing
     void setLife(int l);

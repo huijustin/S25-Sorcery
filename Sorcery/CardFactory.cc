@@ -9,6 +9,8 @@
 #include "GiantStrengthEnchantment.h"
 #include "EnrageEnchantment.h"
 #include "HasteEnchantment.h"
+#include "MagicFatigueEnchantment.h"
+#include "SilenceEnchantment.h"
 #include "Minion.h"
 #include "Spell.h"
 #include <memory>
@@ -51,7 +53,13 @@ CardFactory::CardFactory() {
     masterList.emplace_back(std::make_unique<Spell>(15, "Enrage", 2, "Give a minion *2/*2", std::move(enrage))); 
         // Haste
     auto haste = std::make_unique<BuffEffect>(&enchantTarget, [](Minion* base) { return new HasteEnchantment(base); });
-    masterList.emplace_back(std::make_unique<Spell>(16, "Haste", 1, "Give a minion +1 action each turn", std::move(haste))); 
+    masterList.emplace_back(std::make_unique<Spell>(16, "Haste", 1, "Minion gains +1 action each turn", std::move(haste))); 
+        // Magic Fatigue
+    auto magicFatigue = std::make_unique<BuffEffect>(&enchantTarget,[](Minion* base) { return new MagicFatigueEnchantment(base); });
+    masterList.emplace_back(std::make_unique<Spell>(17,"Magic Fatigue",1,"Minion abilities cost +2 mana",std::move(magicFatigue)));
+        // Silence
+    auto silence = std::make_unique<BuffEffect>(&enchantTarget,[](Minion* base) { return new SilenceEnchantment(base); });
+    masterList.emplace_back(std::make_unique<Spell>(18,"Silence",1,"Minion cannot use abilities",std::move(silence)));
     
     // Create Ritual effects
     // Rituals                CardID, Name, Cost, TriggerCount, Effect,                      Card Text
