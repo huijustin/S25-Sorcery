@@ -14,8 +14,6 @@ protected:
 
     Ability* ability;
 
-    std::vector<Enchantment*> enchantments;
-
 public:
     Minion(int ID, std::string name, int cost, int attack, int defense, Ability* ability, std::string cardText);
 
@@ -31,11 +29,13 @@ public:
     Ability* getAbility() const;
     void useAbility();
 
+    virtual Minion* top();
+
     std::unique_ptr<Card> Minion::clone() const;
 
     // Simple Get functions
-    int getAttack() const;
-    int getDefense() const;
+    virtual int getAttack() const;
+    virtual int getDefense() const;
     int getActions() const;
     void setActions(int a);
     Enchantment* topEnchantment();

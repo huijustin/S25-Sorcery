@@ -92,11 +92,8 @@ Ability* Minion::getAbility() const {
     return ability;
 }
 
-Enchantment* Minion::topEnchantment() {
-    if (!enchantments.empty()) {
-        return enchantments.back();
-    }
-    return nullptr;
+Minion* Minion::top() {
+    return this;
 }
 
 std::unique_ptr<Card> Minion::clone() const {

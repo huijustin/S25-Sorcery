@@ -5,6 +5,9 @@
 #include "TriggerAbility.h"
 #include "DamageEffect.h"  
 #include "SummonEffect.h"
+#include "BuffEffect.h"
+#include "GiantStrengthEnchantment.h"
+#include "EnrageEnchantment.h"
 #include "Minion.h"
 #include "Spell.h"
 #include <memory>
@@ -17,10 +20,12 @@ CardFactory::CardFactory() {
     // Create Minion Abilities
     
     Board* boardPlaceholder = nullptr;
+    Minion* enchantTarget = nullptr;
 
     // Minions                                   CardID, Name,        Cost,ATK,Def,Ability,                  Card Text
     masterList.emplace_back(std::make_unique<Minion>(0, "Air Elemental", 0, 1, 1, nullptr, ""));
     masterList.emplace_back(std::make_unique<Minion>(1, "Earth Elemental", 3, 4, 4, nullptr, ""));
+
     masterList.emplace_back(std::make_unique<Minion>(2, "Bone Golem", 2, 1, 3, nullptr, "Gain +1/+1 whenever a minion leaves play"));
     masterList.emplace_back(std::make_unique<Minion>(3, "Fire Elemental", 2, 2, 2, nullptr, "When an opponent's minion enters play, deal 1 damage to it"));
     masterList.emplace_back(std::make_unique<Minion>(4, "Potion Seller", 2, 1, 3, nullptr, "At the end of your turn, all your minions gain +0/+1"));
@@ -35,8 +40,14 @@ CardFactory::CardFactory() {
     masterList.emplace_back(std::make_unique<Minion>(7, "Master Summoner", 3, 2, 3, masterSummoner, "Summon up to three 1/1 air elementals"));
 
     // Spells
-
-    // Enchantment
+    
+    // Enchantment (Effectively the same as spell cards)
+        // Giant Strength
+    auto giantStrength = std::make_unique<BuffEffect>(&enchantTarget, [](Minion* base) { return new GiantStrengthEnchantment(base); });
+    masterList.emplace_back(std::make_unique<Spell>(14, "Giant Strength", 1, "Give a minion +2/+2", std::move(giantStrength))); 
+        // Enrage
+    auto enrage = std::make_unique<BuffEffect>(&enchantTarget, [](Minion* base) { return new EnrageEnchantment(base); });
+    masterList.emplace_back(std::make_unique<Spell>(15, "Enrage", 2, "Give a minion *2/*2", std::move(enrage))); 
     
     // Create Ritual effects
     // Rituals                CardID, Name, Cost, TriggerCount, Effect,                      Card Text
