@@ -107,13 +107,12 @@ void TextView::inspectMinion(int playerIdx, int minionIdx) const {
     }
     printCardRow({minion->getTemplate()});
 
-    Minion* current = minion;
     // Collect enchantments from base to top
     std::vector<Card*> enchantmentStack = minion->getEnchantmentStack();
 
     // Print each enchantment in rows of 5
     for (size_t i = 0; i < enchantmentStack.size(); i += 5) {
-        std::vector<Card*> row;
+        std::vector<card_template_t> row;
         for (size_t j = i; j < i + 5 && j < enchantmentStack.size(); ++j) {
             row.push_back(enchantmentStack[j]->getTemplate());
         }

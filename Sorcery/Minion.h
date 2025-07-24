@@ -45,6 +45,6 @@ public:
     void setActions(int a);
     void useActions(int a);
     Enchantment* topEnchantment();
-    const std::vector<std::unique_ptr<Card>>& getEnchantmentStack() const;
+    std::vector<Card*> getEnchantmentStack() const;
     void addEnchantmentCard(std::unique_ptr<Card> spellCard);
 };

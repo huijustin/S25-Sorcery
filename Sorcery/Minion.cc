@@ -115,7 +115,13 @@ void Minion::roundEnd() {
 }
 
 // Keep track of enchantments
-const std::vector<std::unique_ptr<Card>>& Minion::getEnchantmentStack() const { return enchantmentStack; }
+std::vector<Card*> Minion::getEnchantmentStack() const {
+    std::vector<Card*> stack;
+    for (const auto& enchantment : enchantmentStack) {
+        stack.push_back(enchantment.get());
+    }
+    return stack;
+}
 void Minion::addEnchantmentCard(std::unique_ptr<Card> spellCard) { enchantmentStack.emplace_back(std::move(spellCard)); }
 
 std::unique_ptr<Card> Minion::clone() const {
