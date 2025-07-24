@@ -21,3 +21,7 @@ void ActivatedAbility::useEffect(Minion* target) {
 int ActivatedAbility::getActivationCost() const {
     return cost;
 }
+
+std::unique_ptr<Effect> ActivatedAbility::cloneEffect() const {
+    return effect ? effect->clone() : nullptr;
+}

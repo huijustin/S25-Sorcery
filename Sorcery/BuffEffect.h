@@ -13,4 +13,6 @@ public:
     bool supportsTarget() const override { return true; }
     void setTarget(Minion* target) override;
     void apply() override;
+    virtual std::unique_ptr<Effect> clone() const = 0;
+
 };

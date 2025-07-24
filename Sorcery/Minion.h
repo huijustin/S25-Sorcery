@@ -26,10 +26,10 @@ public:
     void trigger(const std::string& eventString);
     void play() override;
 
-    Ability* getAbility() const;
+    virtual Ability* getAbility() const;
 
     // Optional target and baord
-    void useAbility(Minion* target = nullptr, Board* board = nullptr);
+    virtual void useAbility(Minion* target = nullptr, Board* board = nullptr);
 
     virtual Minion* top();
 
