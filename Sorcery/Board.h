@@ -11,6 +11,7 @@ public:
     // adds a minion to board, false if board is full
     bool addMinion(Minion* m);
     Minion* removeMinion(int idx);
+    void resetActions();
     
     // accessors
     const std::vector<Minion*>& getMinions() const;
