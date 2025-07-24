@@ -8,14 +8,15 @@
 class Minion : public Card {
 protected:
     int attack;
-    int defense;
+    int defence;
     int actions;
-    int cardText;
+    std::string cardText;
 
-    Ability* ability;
+    std::unique_ptr<Ability> ability;
+    std::vector<std::unique_ptr<Card>> enchantmentStack;
 
 public:
-    Minion(int ID, std::string name, int cost, int attack, int defense, Ability* ability, std::string cardText);
+    Minion(int ID, std::string name, int cost, int attack, int defence, std::unique_ptr<Ability> ability, std::string cardText);
 
     void attackMinion(Minion* targetMinion);
     void attackPlayer(Player* targetPlayer);
@@ -34,13 +35,16 @@ public:
     virtual Minion* top();
 
     virtual void roundStart(); // Run at roundstart to reset actions
+    void roundEnd();
     std::unique_ptr<Card> Minion::clone() const;
 
     // Simple Get functions
     virtual int getAttack() const;
-    virtual int getDefense() const;
+    virtual int getDefence() const;
     int getActions() const;
     void setActions(int a);
     void useActions(int a);
     Enchantment* topEnchantment();
+    std::vector<Card*> getEnchantmentStack() const;
+    void addEnchantmentCard(std::unique_ptr<Card> spellCard);
 };

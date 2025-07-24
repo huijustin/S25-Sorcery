@@ -1,4 +1,8 @@
 #include "Player.h"
+#include "Spell.h"
+#include "BuffEffect.h"
+#include "SummonEffect.h"
+#include <utility>
 #include <iostream>
 
 Player::Player(const std::string &name, const std::string& deckFile, GameEngine* game)
@@ -16,13 +20,13 @@ Player::Player(const std::string &name, const std::string& deckFile, GameEngine*
     }
 }
 
-Player::~Player() { delete ritual; }
+Player::~Player() {}
 
 std::string Player::getName() const { return name; }
 int Player::getLife() const { return life; }
 int Player::getMagic() const { return magic; }
-Ritual* Player::getRitual() const { return ritual; }
-Graveyard* Player::getGraveyard() const { return &graveyard; }
+Ritual* Player::getRitual() const { return ritual.get(); }
+const Graveyard* Player::getGraveyard() const { return graveyard; }
 Board& Player::getBoard() const { return board; }
 Hand& Player::getHand() const { return hand; }
 
@@ -38,7 +42,9 @@ void Player::spendMagic(int cost) { magic -= cost; }
 void Player::startTurn() {
     gainMagic(1);
     drawCard();
-    // TODO: trigger "start of turn" effects (rituals, triggers)
+    if (getRitual()) {
+        getRitual()->trigger("Start of Turn", this);
+    }
 }
 
 void Player::endTurn() {
@@ -64,17 +70,19 @@ void Player::playCard(int idx) {
 
     // Check if the card is a Ritual
     if (Ritual* ritualCard = dynamic_cast<Ritual*>(c)) {
-        if (this->ritual) {
-            std::cerr << "Error: Ritual slot is already occupied." << std::endl;
-            return;
+        if (ritual) {
+            std::cout << "Replacing existing ritual: " << ritual->getName() << std::endl;
+            ritual.reset();
         }
-        this->ritual = ritualCard; 
-        Card *toPlay = hand.removeCard(idx); 
+
+        ritualCard->play(this); 
+        hand.removeCard(idx);
+        spendMagic(c->getCost());
         playSuccessful = true;
     }
 
     // Check if the card is a Minion
-     else if (Minion* minionCard = dynamic_cast<Minion*>(c)) {
+    else if (Minion* minionCard = dynamic_cast<Minion*>(c)) {
         if (board.addMinion(minionCard)) {
             Card *toPlay = hand.removeCard(idx); 
             playSuccessful = true;
@@ -83,6 +91,44 @@ void Player::playCard(int idx) {
             return;
         }
     }
+
+    // Check if its a spell card
+    else if (Spell* spellCard = dynamic_cast<Spell*>(c)) {
+        Effect* effect = spellCard->getEffect();
+
+        // Check if it's an enchantment
+        if (BuffEffect* buff = dynamic_cast<BuffEffect*>(effect)) {
+            Minion* targetMinion = nullptr;  
+            
+            // TODO:
+            // Define how target is selected
+            //
+
+            if (!targetMinion) {
+                std::cerr << "Error: No valid target selected for enchantment." << std::endl;
+                return;
+            }
+
+            // Apply the buff
+            buff->setTarget(targetMinion);
+            buff->apply();
+
+            // Record the spell card on the minion
+            targetMinion->addEnchantmentCard(c->clone());
+
+            // Remove spell from hand
+            Card* toPlay = hand.removeCard(idx);
+            playSuccessful = true;
+
+            std::cout << "Applied enchantment spell: " << c->getName() << " to " << targetMinion->getName() << std::endl;
+        } 
+        // else
+        else {
+
+        }
+    }
+
+
 
     // TODO: Handle other card types (Spells, Enchantments, etc.)
 
@@ -112,7 +158,7 @@ void Player::useAbility(int fromIdx, int targetIdx) {
         std::cerr << "Error: Invalid attacking minion index" << std::endl;
         return;
     }
-    Minion* m = board.getMinions()[fromIdx - 1];
+    Minion* minion = board.getMinions()[fromIdx - 1];
     // Todo: implement m->activateAbility(target)
 
     if (minion->getAbility()->getEffect()->supportsTarget()) {
@@ -131,7 +177,7 @@ void Player::useAbility(int fromIdx, int targetIdx) {
     }
     // another if to check if its a summon effect
     // if it is supply board
-    else if (minion->getAbility()->getEffect()->isSummonEffect()) {
+    else if (auto* summonEffect = dynamic_cast<SummonEffect*>(minion->getAbility()->getEffect())) {
         minion->useAbility(nullptr, &board);
     } else {
         // no target needed, just use the ability
@@ -150,3 +196,6 @@ void Player::drawCard() {
     }
 }
 
+void Player::setRitual(std::unique_ptr<Ritual> newRitual) {
+    ritual = std::move(newRitual);
+}
