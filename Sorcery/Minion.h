@@ -3,6 +3,7 @@
 #include "Enchantment.h"
 #include "Ability.h"
 #include "Player.h"
+#include "ascii_graphics.h"
 #include <vector>
 
 class Minion : public Card {
@@ -49,4 +50,7 @@ public:
     void addEnchantmentCard(std::unique_ptr<Card> spellCard);
 
     virtual std::unique_ptr<Minion> cloneMinion() const;
+
+    // rendering methods
+    virtual card_template_t getTemplate() const;
 };

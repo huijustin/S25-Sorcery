@@ -6,6 +6,8 @@
 #include <iostream>
 
 
+/* Ctor and Dtor */
+
 Player::Player(const std::string &name, const std::string& deckFile, GameEngine* game)
     : name{name}, life{20}, magic{3}, ritual{nullptr}, game{game} {
     deck->load_deck(deckFile);
