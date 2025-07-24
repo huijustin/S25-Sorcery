@@ -1,7 +1,13 @@
-#pragma once
+#ifndef OBSERVER_H
+#define OBSERVER_H
 #include <string>
+
+class GameEngine;
 
 class Observer {
 public:
-    virtual void update(std::string gameState) = 0;
+    virtual void notify() = 0;
+    virtual ~Observer() = default;
 };
+
+#endif
