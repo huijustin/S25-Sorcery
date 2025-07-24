@@ -26,4 +26,12 @@ Minion* Board::removeMinion(int idx) {
     return removed;
 }
 
+void resetActions() {
+    for (auto& minion : minion) {
+        if (minion) {
+            minion->roundStart(); // Reset actions for each minion
+        }
+    }
+}
+
 const std::vector<Minion*>& Board::getMinions() const { return minions; }

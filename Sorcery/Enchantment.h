@@ -10,7 +10,7 @@ public:
     ~Enchantment() override;
 
     int getAttack() const override;
-    int getDefense() const override;
+    int getDefence() const override;
     Minion* top() override; // Access base minion (does NOT delete enchantments from memory)
     Minion* getBase();  // Access minion with topmost layer removed (does NOT delete enchantments from memory)
 

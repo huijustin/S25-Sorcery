@@ -14,5 +14,6 @@ public:
     int getActivationCost() const;
 
     std::unique_ptr<Effect> cloneEffect() const; // To avoid sharing pointers between abilities
+    std::unique_ptr<Ability> clone() const override;
 
 };

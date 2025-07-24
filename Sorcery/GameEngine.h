@@ -4,7 +4,6 @@
 #include <string>
 #include "Player.h"
 #include "Card.h"
-#include "CommandParser.h"
 #include "Observer.h"
 
 class Player;
@@ -42,6 +41,7 @@ public:
 
     Player* getPlayer(int idx) const;
     Player* getActivePlayer() const;
+    Player* getInactivePlayer() const;
     bool isTestingMode() const;
 
     // Observer methods

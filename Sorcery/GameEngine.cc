@@ -123,6 +123,19 @@ Player* GameEngine::getPlayer(int idx) const {
     return players[idx];
 }
 
+Player* GameEngine::getActivePlayer() const {
+    if (activePlayer < 0 || activePlayer >= players.size()) {
+        std::cerr << "Invalid active player index: " << activePlayer << std::endl;
+        return nullptr;
+    }
+    return players[activePlayer];
+}
+
+Player* GameEngine::getInactivePlayer() const {
+    int inactiveIdx = (activePlayer + 1) % players.size();
+    return getPlayer(inactiveIdx);
+}
+
 bool GameEngine::isTestingMode() const {
     return testingMode;
 }

@@ -12,8 +12,8 @@ int Enchantment::getAttack() const {
     return base->getAttack();
 }
 
-int Enchantment::getDefense() const {
-    return base->getDefense();
+int Enchantment::getDefence() const {
+    return base->getDefence();
 }
 
 Minion* Enchantment::top() {
