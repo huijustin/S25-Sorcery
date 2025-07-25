@@ -24,6 +24,9 @@ public:
     std::string getTriggerCondition() const;
 
     std::unique_ptr<Card> clone() const override;
+
+    card_template_t getTemplate() const override;
+
 };
 
 #endif
