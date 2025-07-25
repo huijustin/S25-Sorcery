@@ -1,4 +1,7 @@
 #include "Ability.h"
+#include <string>
+
+class Minion;
 
 Ability::Ability(std::unique_ptr<Effect> effect, std::string description)
     : effect(std::move(effect)), description(std::move(description)) {}

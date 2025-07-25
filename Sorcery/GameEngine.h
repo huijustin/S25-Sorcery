@@ -43,7 +43,6 @@ public:
     void run();
     void processCommand(const std::string &input);
     void registerObserver(Observer*);
-    void notifyObservers();
 
     Player* getPlayer(int idx) const;
     Player* getActivePlayer() const;

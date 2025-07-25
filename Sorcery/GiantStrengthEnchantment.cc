@@ -1,4 +1,4 @@
-#include <GiantStrengthEnchantment.h>
+#include "GiantStrengthEnchantment.h"
 
 int GiantStrengthEnchantment::getAttack() const {
     return base->getAttack() + 2;
