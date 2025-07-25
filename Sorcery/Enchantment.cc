@@ -1,4 +1,5 @@
 #include "Enchantment.h"
+#include "ActivatedAbility.h"
 #include <iostream>
 #include <typeinfo>
 
@@ -45,10 +46,17 @@ Minion* Enchantment::removeAllEnchantments(Minion* minion) {
 }
 
 card_template_t Enchantment::getTemplate() const {
-    if (name == "Giant Strength" || name == "Enrage") {
-        return display_enchantment_attack_defence(
-            name, cost, cardText, std::to_string(getAttack()), std::to_string(getDefence()));
+    Ability *ab = getAbility();
+
+    card_template_t render;
+    if (!ab) {
+        render = display_minion_no_ability(name, cost, getAttack(), getDefence());
+    } else if (auto* act = dynamic_cast<ActivatedAbility*>(ab)) {
+        render = display_minion_activated_ability(name, cost, getAttack(), getDefence(), act->getActivationCost(), act->getDescription());
     } else {
-        return display_enchantment(name, cost, cardText);
+        std::cerr << "Error: Unknown ability type for enchantment " << name << std::endl;
+        render = display_minion_no_ability(name, cost, getAttack(), getDefence());
     }
+
+    return render;
 }
