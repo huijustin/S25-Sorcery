@@ -53,6 +53,8 @@ public:
     void attach(Observer* o);
     void detach(Observer* o);
     void notifyObservers();
+
+    void playerDefeated(Player* loser);
 };
 
 #endif

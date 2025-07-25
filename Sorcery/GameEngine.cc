@@ -292,3 +292,15 @@ void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basi
     std::cout << "It is now " << playerNames[activePlayer] << "'s turn" << std::endl;
     players[activePlayer]->startTurn();
 } 
+
+void GameEngine::playerDefeated(Player *loser) {
+    if (gameOver) return;
+    gameOver = true;
+    if (loser) {
+        std::cout << loser->getName() << " looosssssseeeerrrrrr!! (disappointment)" << std::endl;
+    }
+    Player *winner = getActivePlayer();
+    if (winner) {
+        std::cout << winner->getName() << " wins!" << std::endl;
+    }
+}
