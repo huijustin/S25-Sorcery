@@ -42,7 +42,7 @@ void TextView::printBoard() const {
     std::vector<card_template_t> p1_topRow;
     p1_topRow.push_back(p1->getRitual() ? p1->getRitual()->getTemplate() : CARD_TEMPLATE_BORDER);
     p1_topRow.push_back(CARD_TEMPLATE_EMPTY);
-    p1_topRow.push_back(display_player_card(1, p1->getName(), p1->getlife(), p1->getMagic()));
+    p1_topRow.push_back(display_player_card(1, p1->getName(), p1->getLife(), p1->getMagic()));
     p1_topRow.push_back(CARD_TEMPLATE_EMPTY);
     p1_topRow.push_back(p1->getGraveyard()->isEmpty() ? CARD_TEMPLATE_BORDER : p1->getGraveyard()->getTop()->getTemplate());
     printCardRow(p1_topRow);
@@ -50,7 +50,7 @@ void TextView::printBoard() const {
     // Player 1 Minions
     std::vector<card_template_t> p1_minions;
     for (int i = 0; i < 5; ++i) {
-        p1_minions.push_back(p1->getBoard().getMinions(i) ? p1->getBoard().getMinions(i)->getTemplate() : CARD_TEMPLATE_BORDER);
+        p1_minions.push_back(p1->getBoard()->getMinions()[i] ? p1->getBoard()->getMinions()[i]->getTemplate() : CARD_TEMPLATE_BORDER);
     }
     printCardRow(p1_minions);
 
@@ -62,7 +62,7 @@ void TextView::printBoard() const {
     // Player 2 Minions
     std::vector<card_template_t> p2_minions;
     for (int i = 0; i < 5; ++i) {
-        p2_minions.push_back(p2->getBoard().getMinions(i) ? p2->getBoard().getMinions(i)->getTemplate() : CARD_TEMPLATE_BORDER);
+        p2_minions.push_back(p2->getBoard()->getMinions(i) ? p2->getBoard()->getMinions(i)->getTemplate() : CARD_TEMPLATE_BORDER);
     }
     printCardRow(p2_minions);
 
@@ -70,7 +70,7 @@ void TextView::printBoard() const {
     std::vector<card_template_t> p2_bottomRow;
     p2_bottomRow.push_back(p2->getRitual() ? p2->getRitual()->getTemplate() :CARD_TEMPLATE_BORDER);
     p2_bottomRow.push_back(CARD_TEMPLATE_EMPTY);
-    p2_bottomRow.push_back(display_player_card(p2->getName(), p2->getLife(), p2->getMagic()));
+    p2_bottomRow.push_back(display_player_card(1,p2->getName(), p2->getLife(), p2->getMagic()));
     p2_bottomRow.push_back(CARD_TEMPLATE_EMPTY);
     p2_bottomRow.push_back(p2->getGraveyard()->isEmpty() ? CARD_TEMPLATE_BORDER : p2->getGraveyard()->getTop()->getTemplate());
     printCardRow(p2_bottomRow);
@@ -100,7 +100,7 @@ void TextView::inspectMinion(int playerIdx, int minionIdx) const {
         return;
     }
 
-    const auto& minion = player->getBoard().getMinions()[minionIdx - 1];
+    const auto& minion = player->getBoard()->getMinions()[minionIdx - 1];
     if (!minion) {
         std::cerr << "Error: No minion at index " << minionIdx << std::endl;
         return;
