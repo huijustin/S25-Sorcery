@@ -50,6 +50,10 @@ public:
     void useActions(int a);
     Minion* topEnchantment();
     std::vector<Card*> getEnchantmentStack() const;
+
+    std::vector<std::unique_ptr<Card>>& accessEnchantmentStack() {return enchantmentStack;}
+    void takeEnchantmentStack(std::vector<std::unique_ptr<Card>>&& newStack) {enchantmentStack = std::move(newStack);}
+    void setEnchantmentStack(std::vector<std::unique_ptr<Card>>&& stack);
     void addEnchantmentCard(std::unique_ptr<Card> spellCard);
 
     virtual std::unique_ptr<Minion> cloneMinion() const;
