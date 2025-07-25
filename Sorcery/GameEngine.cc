@@ -1,8 +1,37 @@
 #include <GameEngine.h>
+#include <CardFactory.h>
 #include <TextView.h>
 #include <iostream> 
 #include <fstream>
 #include <sstream>
+
+extern CardFactory Factory;
+
+GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile) :
+    testingMode{testingMode}, graphicMode{graphicMode}, initFile{initFile}, activePlayer{0}, gameOver{false} {
+
+        Deck* deck1 = new Deck();
+        if (!deck1File.empty()) {
+            deck1->load_deck(deck1File, Factory);
+        }
+        else {
+            deck1->load_deck("default.deck", Factory);
+        }
+
+        Deck* deck2 = new Deck();
+        if (!deck2File.empty()) {
+            deck2->load_deck(deck2File, Factory);
+        }
+        else {
+            deck2->load_deck("default.deck", Factory);
+        }
+
+        players.emplace_back(new Player("Player 1", deck1File, this));
+        players.emplace_back(new Player("Player 2", deck2File, this));
+
+        notifyObservers();
+    }
+
 
 void GameEngine::run() {
     activePlayer = 0;
