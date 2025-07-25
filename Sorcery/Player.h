@@ -23,6 +23,7 @@ class Player {
     Graveyard* graveyard;
     std::unique_ptr<Ritual> ritual;
     GameEngine* game;
+    bool firsTurn;
 
 public:
     // ctor
