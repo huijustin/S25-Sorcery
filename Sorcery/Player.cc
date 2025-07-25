@@ -118,7 +118,7 @@ void Player::playCard(int idx) {
     game->getInactivePlayer()->cleanupDeadMinions();
 }
 
-void Player::playCard(int idx, Player* target, char cardType) {
+void Player::playCard(int idx, Player* target, int cardIdx) {
     Card* card = hand->removeCard(idx);
     if (!card) {
         std::cerr << "Error: No card at index " << idx << std::endl;
@@ -136,11 +136,10 @@ void Player::playCard(int idx, Player* target, char cardType) {
     }
 
     Minion* targetMinion = nullptr;
-    if (cardType != 'r') {
-        int targetIdx = cardType - '0';
+    if (cardIdx > 0) {
         const auto targetBoard = target->getBoard()->getMinions();
-        if (targetIdx >= 1 && targetIdx <= static_cast<int>(targetBoard.size())) {
-            targetMinion = targetBoard[targetIdx - 1];
+        if (cardIdx >= 1 && cardIdx <= static_cast<int>(targetBoard.size())) {
+            targetMinion = targetBoard[cardIdx - 1];
         }
     }
 
@@ -250,7 +249,7 @@ void Player::useAbility(int idx) {
     }
 }
 
-void Player::useAbility(int idx, Player* target, char cardType) {
+void Player::useAbility(int idx, Player* target, int cardIdx) {
     const auto& minions = board->getMinions();
     if (idx < 1 || idx > static_cast<int>(minions.size())) {
         std::cerr << "Error: Invalid minion index " << idx << std::endl;
@@ -270,100 +269,18 @@ void Player::useAbility(int idx, Player* target, char cardType) {
         }
     }
     Minion* targetMinion = nullptr;
-    if (cardType != 'r') {
-    int targetIdx = cardType - '0';
-    const auto& enemy = target->board->getMinions();
-    if (targetIdx >= 1 || targetIdx <= static_cast<int>(enemy.size())) {
-        targetMinion = enemy[targetIdx - 1];
+    if (cardIdx > 0) {
+        const auto& enemy = target->board->getMinions();
+        if (cardIdx >= 1 && cardIdx <= static_cast<int>(enemy.size())) {
+            targetMinion = enemy[cardIdx - 1];
         }
     }
+
     m->useAbility(targetMinion, board);
+
     // check for minions that may have died
     cleanupDeadMinions();
     target->cleanupDeadMinions();
-
-    if (idx < 1 || idx > hand->getSize()) {
-        std::cerr << "Error: Invalid card index." << std::endl;
-        return;
-    }
-    Card *c = hand->getCard(idx);
-    if (!c) {
-        std::cerr << "Error: Invalid card index or Hand is empty" << std::endl;
-        return;
-    }
-    if (c->getCost() > magic) {
-        std::cerr << "Error: Not enough magic to play this card." << std::endl;
-        return;
-    }
-    // attempt to play the card
-    bool playSuccessful = false;
-
-    // Check if the card is a Ritual
-    if (Ritual* ritualCard = dynamic_cast<Ritual*>(c)) {
-        if (ritual) {
-            std::cout << "Replacing existing ritual: " << ritual->getName() << std::endl;
-            ritual.reset();
-        }
-
-        ritualCard->play(this); 
-        hand->removeCard(idx);
-        spendMagic(c->getCost());
-        playSuccessful = true;
-    }
-
-    // Check if the card is a Minion
-    else if (Minion* minionCard = dynamic_cast<Minion*>(c)) {
-        if (board->addMinion(minionCard)) {
-            Card *toPlay = hand->removeCard(idx); 
-            playSuccessful = true;
-            delete toPlay;
-        } else {
-            std::cerr << "Error: Board is full, cannot add minion." << std::endl;
-            return;
-        }
-    }
-
-    // Check if its a spell card
-    else if (Spell* spellCard = dynamic_cast<Spell*>(c)) {
-        Effect* effect = spellCard->getEffect();
-
-        // Check if it's an enchantment
-        if (BuffEffect* buff = dynamic_cast<BuffEffect*>(effect)) {
-
-            if (!targetMinion) {
-                std::cerr << "Error: No valid target selected for enchantment." << std::endl;
-                return;
-            }
-
-            // Apply the buff
-            buff->setTarget(targetMinion);
-            buff->apply();
-
-            // Record the spell card on the minion
-            targetMinion->addEnchantmentCard(c->clone());
-
-            // Remove spell from hand
-            Card* toPlay = hand->removeCard(idx);
-            playSuccessful = true;
-            delete toPlay;
-
-            std::cout << "Applied enchantment spell: " << c->getName() << " to " << targetMinion->getName() << std::endl;
-        } 
-        // else
-        else {
-
-        }
-    }
-
-    // TODO: Handle other card types (Spells, Enchantments, etc.)
-
-    if (playSuccessful) {
-        spendMagic(c->getCost());
-        c->play();
-        // check again after playing card
-        cleanupDeadMinions();
-        target->cleanupDeadMinions();
-    }
 }
 
 void Player::drawCard() {

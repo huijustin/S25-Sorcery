@@ -138,8 +138,8 @@ void GameEngine::processCommand(const std::string &input) {
         else if (args.size() == 3) {
             int idx = std::stoi(args[0]);
             int targetPlayer = std::stoi(args[1]);
-            char targetCard = std::stoi(args[2]);
-            getActivePlayer()->playCard(idx, getPlayer(targetPlayer-1), targetCard);  //NEED AN UPDATED playCard IN PLAYER CLASS
+            int targetCard = std::stoi(args[2]);
+            getActivePlayer()->playCard(idx, getPlayer(targetPlayer-1), targetCard);
         }
         else {
             std::cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
@@ -168,7 +168,7 @@ void GameEngine::processCommand(const std::string &input) {
             int minionidx = std::stoi(args[0]);
             int targetPlayer = std::stoi(args[1]);
             int targetCard = std::stoi(args[2]);
-            getActivePlayer()->useAbility(minionidx, getPlayer(targetPlayer-1), targetCard); // NEED TO CHECK ARGUMENTS
+            getActivePlayer()->useAbility(minionidx, getPlayer(targetPlayer-1), targetCard);
         }
         else {
             std::cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
