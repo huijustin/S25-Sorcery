@@ -1,10 +1,11 @@
 #pragma once
 #include "Card.h"
-#include "Enchantment.h"
 #include "Ability.h"
 #include "Player.h"
 #include "ascii_graphics.h"
 #include <vector>
+
+class Enchantment;
 
 class Minion : public Card {
 protected:
@@ -46,7 +47,7 @@ public:
     int getActions() const;
     void setActions(int a);
     void useActions(int a);
-    Enchantment* topEnchantment();
+    Minion* topEnchantment();
     std::vector<Card*> getEnchantmentStack() const;
     void addEnchantmentCard(std::unique_ptr<Card> spellCard);
 

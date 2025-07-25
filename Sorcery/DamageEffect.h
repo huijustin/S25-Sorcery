@@ -1,6 +1,6 @@
 #pragma once
 #include "Effect.h"
-#include "Minion.h"
+class Minion;
 
 class DamageEffect : public Effect {
     Minion* targetEntity = nullptr;
