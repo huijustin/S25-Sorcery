@@ -19,7 +19,12 @@ void BuffEffect::setSlotPointer(Minion** ptr) {
 void BuffEffect::apply() {
     if (targetSlot && *targetSlot) {
         Minion* current = *targetSlot;
-        *targetSlot = enchantmentApplicator(current);  // Apply enchantment
+        Minion* enchanted = enchantmentApplicator(current);  // Apply enchantment
+
+        // Move internal enchantment stack
+        enchanted->takeEnchantmentStack(std::move(current->accessEnchantmentStack()));
+
+        *targetSlot = enchanted;
         std::cout << "Applied enchantment to " << current->getName() << std::endl;
     } else {
         std::cerr << "BuffEffect failed: No valid target." << std::endl;

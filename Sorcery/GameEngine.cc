@@ -8,13 +8,14 @@
 #include <iostream> 
 #include <fstream>
 #include <sstream>
+#include <string>
 #include "Deck.h"
 #include "Hand.h"
 
 extern CardFactory Factory;
 
 GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile, std::string deck1File, std::string deck2File) :
-    testingMode{testingMode}, graphicMode{graphicMode}, initFile{initFile}, activePlayer{0}, gameOver{false} {
+    testingMode{testingMode}, graphicMode{graphicMode}, initFile{initFile}, activePlayer{0}, gameOver{false} {  // Constructor
 
         std::string player1DeckFile;
         if (deck1File.empty()) {
@@ -49,33 +50,41 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile,
             delete deck2;
             throw std::runtime_error("Failed to load deck for Player 2");
         }
-        /*
-        if (!deck1File.empty()) {
-            deck1->load_deck(deck1File, Factory);
-        }
-        else {
-            deck1->load_deck("default.deck", Factory);
-        }
 
-        Deck* deck2 = new Deck();
-        if (!deck2File.empty()) {
-            deck2->load_deck(deck2File, Factory);
-        }
-        else {
-            deck2->load_deck("default.deck", Factory);
-        }
-        */
         std::string name1, name2;
-        std::cout << "Enter Player 1's name: ";
-        std::cin >> name1;
-        std::cout << "Enter Player 2's name: ";
-        std::cin >> name2;
-
-        playerNames.push_back(name1);
-        playerNames.push_back(name2);
-
-        players.emplace_back(new Player(name1, deck1, this));
-        players.emplace_back(new Player(name2, deck2, this));
+        if (initFile == "") {
+            std::cout << "Enter Player 1's name: ";
+            std::cin >> name1;
+            std::cout << "Enter Player 2's name: ";
+            std::cin >> name2;
+            playerNames.push_back(name1);
+            playerNames.push_back(name2);
+            players.emplace_back(new Player(name1, deck1, this));
+            players.emplace_back(new Player(name2, deck2, this));
+        }
+        else {
+            std::ifstream file(initFile);
+            if (!file) {
+                throw std::runtime_error("Could not open the init file");
+            }
+            std::string line;
+            if (std::getline(file, line)) {
+                name1 = line;
+                playerNames.push_back(name1);
+                players.emplace_back(new Player(name1, deck1, this));
+            }
+            else {
+                throw std::runtime_error("Init file is empty");
+            }
+            if (std::getline(file, line)) {
+                name2 = line;
+                playerNames.push_back(name2);
+                players.emplace_back(new Player(name2, deck2, this));
+            }
+            while (std::getline(file, line)) {
+                processCommand(line);
+            }
+        }
 
         textView = new TextView{this};
         if (graphicMode) {
@@ -83,7 +92,7 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile,
         }
     }
 
-GameEngine::~GameEngine() {
+GameEngine::~GameEngine() { // Destructor
     delete textView;
     delete graphicsView;
     for (auto *player : players) {
@@ -104,8 +113,7 @@ void GameEngine::run() {
             this->processCommand(cmdstring);
         }
     }
-    // DO WE NEED TO CHECK IF GAME HAS ENDED
-    std::cout << "Game has ended.\n"; 
+    std::cout << "Game has ended.\n"; // Game ended message
 }
 
 void GameEngine::processCommand(const std::string &input) {
@@ -119,19 +127,17 @@ void GameEngine::processCommand(const std::string &input) {
         args.push_back(arg);
     }
 
-    //Command cmd = parserCmd.parse(cmdString);
-
     if (cmd == "help") {
-        displayHelp();
+        displayHelp(); // call to displayHelp()
     }
     else if (cmd == "end") {
-        endTurn();  //NEED TO CHNAGE TO PLAYER ednTurn METHOD
+        endTurn();  // call to endTurn()
     }
     else if (cmd == "quit") {
-        quitGame();
+        quitGame(); // call to quitGame()
     }
     else if (cmd == "play") {
-        if (args.size() == 1) {
+        if (args.size() == 1) { // Checks the amount of arguments
             int idx = std::stoi(args[0]);
             getActivePlayer()->playCard(idx);
         }
@@ -142,27 +148,27 @@ void GameEngine::processCommand(const std::string &input) {
             getActivePlayer()->playCard(idx, getPlayer(targetPlayer-1), targetCard);
         }
         else {
-            std::cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
+            std::cout << "Invalid number of arguments for attack." << std::endl; // Message for invalid number of arguments
         }
     }
     else if (cmd == "attack") {
-        if (args.size() == 1) {
+        if (args.size() == 1) {     // Checks the amount of arguments
             int attackeridx = std::stoi(args[0]);
             getActivePlayer()->attack(attackeridx);
         }
         else if (args.size() == 2) {
             int attackeridx = std::stoi(args[0]);
             int defenderidx = std::stoi(args[1]);
-            getActivePlayer()->attack(attackeridx, defenderidx); //AMKE SURE WE HAVE THE RIGHT PARAMETERS IN ATTACK METHOD
+            getActivePlayer()->attack(attackeridx, defenderidx);
         }
         else {
-            std::cout << "Invalid number of arguments for attack." << std::endl;
+            std::cout << "Invalid number of arguments for attack." << std::endl; // Message for invalid number of arguments
         }
     }
     else if (cmd == "use") {   // Uses Minion Special Ability
         if (args.size() == 1) {
             int minionidx = std::stoi(args[0]);
-            getActivePlayer()->useAbility(minionidx); // CHECK IF ONE ARGUMENT IS VALID
+            getActivePlayer()->useAbility(minionidx);
         }
         else if (args.size() == 3) {
             int minionidx = std::stoi(args[0]);
@@ -171,7 +177,7 @@ void GameEngine::processCommand(const std::string &input) {
             getActivePlayer()->useAbility(minionidx, getPlayer(targetPlayer-1), targetCard);
         }
         else {
-            std::cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
+            std::cout << "Invalid number of arguments for attack." << std::endl; // Message for invalid number of arguments
         }
     }
     else if (cmd == "inspect") {  
@@ -278,12 +284,11 @@ void GameEngine::discardCard(int idx) {
 }
 
 void GameEngine::startTurn() {
-    getActivePlayer()->startTurn(); // CHECK POINTER
+    getActivePlayer()->startTurn();
 }
 
-void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basis
-    //players[activePlayer]->endTurn();
-    if (activePlayer == 1) {
+void GameEngine::endTurn() { 
+    if (activePlayer == 1) {    // Makes the other player the active one
         activePlayer = 0;
     }
     else {
