@@ -16,7 +16,7 @@
 /* Ctor and Dtor */
 
 Player::Player(const std::string &name, Deck* deck, GameEngine* game)
-    : name{name}, life{20}, magic{3}, deck{deck}, 
+    : name{name}, life{20}, magic{2}, deck{deck}, 
       hand{new Hand()}, board{new Board()}, graveyard{new Graveyard()}, ritual{nullptr}, game{game} {
     if (!game) {
         std::cerr << "Error: GameEngine pointer is null." << std::endl;
