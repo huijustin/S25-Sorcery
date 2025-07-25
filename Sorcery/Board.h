@@ -1,7 +1,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include <vector>
-#include "Minion.h"
+
+class Minion;
 
 class Board {
     std::vector<Minion*> minions;

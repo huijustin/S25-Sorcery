@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "Minion.h"
 #include <iostream>
 
 Board::~Board() { for (auto m : minions) delete m; }

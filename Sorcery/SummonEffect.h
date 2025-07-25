@@ -16,6 +16,6 @@ public:
     void setBoard(Board* board);
     void apply() override;
     bool supportsTarget() const override { return false; }
-    virtual std::unique_ptr<Effect> clone() const = 0;
+    std::unique_ptr<Effect> clone() const override;
 
 };
