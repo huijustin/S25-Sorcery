@@ -74,7 +74,8 @@ void Player::endTurn() {
 }
 
 void Player::playCard(int idx) {
-    Card* card = hand->removeCard(idx);
+    Card* card = hand->getCard(idx);
+
     if (!card) {
         std::cerr << "Error: No card at index " << idx << std::endl;
         return;
@@ -83,12 +84,18 @@ void Player::playCard(int idx) {
     int cost = card->getCost();
     if (!game->isTestingMode() && cost > magic) {
         std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
-        hand->addCard(card); // Return the card back to hand
+        return;
+    }
+
+    if (!game->isTestingMode() && cost > magic) {
+        std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
         return;
     }
     if (!game->isTestingMode()) {
         spendMagic(cost);
     }
+
+    card = hand->removeCard(idx);
 
     // check if the card is a minion
     if (auto* minion = dynamic_cast<Minion*>(card)) {
@@ -118,8 +125,9 @@ void Player::playCard(int idx) {
     game->getInactivePlayer()->cleanupDeadMinions();
 }
 
-void Player::playCard(int idx, Player* target, char cardType) {
-    Card* card = hand->removeCard(idx);
+void Player::playCard(int idx, Player* target, int cardIdx) {
+    Card* card = hand->getCard(idx);
+
     if (!card) {
         std::cerr << "Error: No card at index " << idx << std::endl;
         return;
@@ -127,26 +135,55 @@ void Player::playCard(int idx, Player* target, char cardType) {
 
     int cost = card->getCost();
     if (!game->isTestingMode() && cost > magic) {
-        std::cerr << "Not enough magic to play card " << card->getName() << std::endl;
-        hand->addCard(card); // Return the card back to hand
+        std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
+        return;
+    }
+
+    if (!game->isTestingMode() && cost > magic) {
+        std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
         return;
     }
     if (!game->isTestingMode()) {
         spendMagic(cost);
     }
 
+    card = hand->removeCard(idx);
+
     Minion* targetMinion = nullptr;
-    if (cardType != 'r') {
-        int targetIdx = cardType - '0';
+    if (cardIdx > 0) {
         const auto targetBoard = target->getBoard()->getMinions();
-        if (targetIdx >= 1 && targetIdx <= static_cast<int>(targetBoard.size())) {
-            targetMinion = targetBoard[targetIdx - 1];
+        if (cardIdx >= 1 && cardIdx <= static_cast<int>(targetBoard.size())) {
+            targetMinion = targetBoard[cardIdx - 1];
         }
     }
 
     // check if the card is a spell
     if (auto* spell = dynamic_cast<Spell*>(card)) {
-        spell->play(targetMinion);
+        // If buff
+        if (auto* buff = dynamic_cast<BuffEffect*>(spell->getEffect())) {
+            if (!targetMinion) {
+                std::cerr << "BuffEffect requires a target minion, but none provided." << std::endl;
+                delete spell;
+                return;
+            }
+
+            // Get the actual minion slot pointer on the board
+            Minion*& boardSlot = board->getMinions()[cardIdx - 1];
+
+            // Inject correct slot pointer into effect
+            buff->setSlotPointer(&boardSlot);
+            buff->setTarget(boardSlot);
+            buff->apply();
+
+            // Also record the enchantment on the minion for later undo/display
+            boardSlot->addEnchantmentCard(spell->clone());
+
+            std::cout << "Applied BuffEffect from spell: " << spell->getName() << " to " << boardSlot->getName() << std::endl;
+        } else {
+            // Normal non-buff spell
+            spell->play(targetMinion);
+        }
+
         delete spell;
     } 
     // check if the card is a minion
@@ -250,7 +287,7 @@ void Player::useAbility(int idx) {
     }
 }
 
-void Player::useAbility(int idx, Player* target, char cardType) {
+void Player::useAbility(int idx, Player* target, int cardIdx) {
     const auto& minions = board->getMinions();
     if (idx < 1 || idx > static_cast<int>(minions.size())) {
         std::cerr << "Error: Invalid minion index " << idx << std::endl;
@@ -270,100 +307,18 @@ void Player::useAbility(int idx, Player* target, char cardType) {
         }
     }
     Minion* targetMinion = nullptr;
-    if (cardType != 'r') {
-    int targetIdx = cardType - '0';
-    const auto& enemy = target->board->getMinions();
-    if (targetIdx >= 1 || targetIdx <= static_cast<int>(enemy.size())) {
-        targetMinion = enemy[targetIdx - 1];
+    if (cardIdx > 0) {
+        const auto& enemy = target->board->getMinions();
+        if (cardIdx >= 1 && cardIdx <= static_cast<int>(enemy.size())) {
+            targetMinion = enemy[cardIdx - 1];
         }
     }
+
     m->useAbility(targetMinion, board);
+
     // check for minions that may have died
     cleanupDeadMinions();
     target->cleanupDeadMinions();
-
-    if (idx < 1 || idx > hand->getSize()) {
-        std::cerr << "Error: Invalid card index." << std::endl;
-        return;
-    }
-    Card *c = hand->getCard(idx);
-    if (!c) {
-        std::cerr << "Error: Invalid card index or Hand is empty" << std::endl;
-        return;
-    }
-    if (c->getCost() > magic) {
-        std::cerr << "Error: Not enough magic to play this card." << std::endl;
-        return;
-    }
-    // attempt to play the card
-    bool playSuccessful = false;
-
-    // Check if the card is a Ritual
-    if (Ritual* ritualCard = dynamic_cast<Ritual*>(c)) {
-        if (ritual) {
-            std::cout << "Replacing existing ritual: " << ritual->getName() << std::endl;
-            ritual.reset();
-        }
-
-        ritualCard->play(this); 
-        hand->removeCard(idx);
-        spendMagic(c->getCost());
-        playSuccessful = true;
-    }
-
-    // Check if the card is a Minion
-    else if (Minion* minionCard = dynamic_cast<Minion*>(c)) {
-        if (board->addMinion(minionCard)) {
-            Card *toPlay = hand->removeCard(idx); 
-            playSuccessful = true;
-            delete toPlay;
-        } else {
-            std::cerr << "Error: Board is full, cannot add minion." << std::endl;
-            return;
-        }
-    }
-
-    // Check if its a spell card
-    else if (Spell* spellCard = dynamic_cast<Spell*>(c)) {
-        Effect* effect = spellCard->getEffect();
-
-        // Check if it's an enchantment
-        if (BuffEffect* buff = dynamic_cast<BuffEffect*>(effect)) {
-
-            if (!targetMinion) {
-                std::cerr << "Error: No valid target selected for enchantment." << std::endl;
-                return;
-            }
-
-            // Apply the buff
-            buff->setTarget(targetMinion);
-            buff->apply();
-
-            // Record the spell card on the minion
-            targetMinion->addEnchantmentCard(c->clone());
-
-            // Remove spell from hand
-            Card* toPlay = hand->removeCard(idx);
-            playSuccessful = true;
-            delete toPlay;
-
-            std::cout << "Applied enchantment spell: " << c->getName() << " to " << targetMinion->getName() << std::endl;
-        } 
-        // else
-        else {
-
-        }
-    }
-
-    // TODO: Handle other card types (Spells, Enchantments, etc.)
-
-    if (playSuccessful) {
-        spendMagic(c->getCost());
-        c->play();
-        // check again after playing card
-        cleanupDeadMinions();
-        target->cleanupDeadMinions();
-    }
 }
 
 void Player::drawCard() {

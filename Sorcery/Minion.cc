@@ -62,7 +62,10 @@ void Minion::play() {
 }
 
 void Minion::useAbility(Minion* target, Board* board) {
-    if (actions <= 0) { return; }
+    if (actions <= 0) { 
+        std::cout << "That minion is out of actions!" << std::endl;
+        return; 
+    }
 
     // Check for no Ability
     if (!getAbility()) {
@@ -138,6 +141,12 @@ std::vector<Card*> Minion::getEnchantmentStack() const {
     }
     return stack;
 }
+void Minion::setEnchantmentStack(std::vector<std::unique_ptr<Card>>&& stack) {
+    if (!stack.empty()) {
+        enchantmentStack = std::move(stack);
+    }
+}
+
 void Minion::addEnchantmentCard(std::unique_ptr<Card> spellCard) { enchantmentStack.emplace_back(std::move(spellCard)); }
 
 std::unique_ptr<Card> Minion::clone() const {
