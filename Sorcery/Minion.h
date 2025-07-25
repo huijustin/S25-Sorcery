@@ -6,6 +6,7 @@
 
 class Player;
 class Board;
+
 class Enchantment;
 
 class Minion : public Card {
@@ -48,7 +49,7 @@ public:
     int getActions() const;
     void setActions(int a);
     void useActions(int a);
-    Enchantment* topEnchantment();
+    Minion* topEnchantment();
     std::vector<Card*> getEnchantmentStack() const;
     void addEnchantmentCard(std::unique_ptr<Card> spellCard);
 

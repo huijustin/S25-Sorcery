@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Board.h"
 #include "Effect.h"
+#include "Enchantment.h"
 #include "DamageEffect.h"
 #include "SummonEffect.h"
 #include "ActivatedAbility.h"
@@ -118,6 +119,14 @@ void Minion::roundStart() {
 
 void Minion::roundEnd() {
     
+}
+
+Minion* Minion::topEnchantment() {
+    // downcast top enchantment if it exists
+    if (!enchantmentStack.empty()) {
+        return dynamic_cast<Enchantment*>(enchantmentStack.back().get());
+    }
+    return nullptr;
 }
 
 // Keep track of enchantments

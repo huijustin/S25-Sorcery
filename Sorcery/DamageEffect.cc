@@ -1,5 +1,6 @@
 #include "DamageEffect.h"
 #include <iostream>
+#include "Minion.h"
 
 DamageEffect::DamageEffect(int damage)
     : targetEntity(nullptr), damage(damage) {}

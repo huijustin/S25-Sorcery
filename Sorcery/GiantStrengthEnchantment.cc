@@ -3,6 +3,7 @@
 GiantStrengthEnchantment::GiantStrengthEnchantment(Minion* base)
     : Enchantment(base) {}
 
+
 int GiantStrengthEnchantment::getAttack() const {
     return base->getAttack() + 2;
 }
