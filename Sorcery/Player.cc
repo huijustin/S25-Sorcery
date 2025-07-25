@@ -303,11 +303,6 @@ void Player::useAbility(int idx, Player* target, char cardType) {
 
         // Check if it's an enchantment
         if (BuffEffect* buff = dynamic_cast<BuffEffect*>(effect)) {
-            Minion* targetMinion = nullptr;  
-            
-            // TODO:
-            // Define how target is selected
-            //
 
             if (!targetMinion) {
                 std::cerr << "Error: No valid target selected for enchantment." << std::endl;
