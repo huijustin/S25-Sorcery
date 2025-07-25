@@ -95,10 +95,14 @@ void Player::playCard(int idx) {
         return;
     }
 
-    if (!game->isTestingMode() && cost > magic) {
-        std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
-        return;
+    if (auto *spell = dynamic_cast<Spell*>(card)) {
+        auto *effect = spell->getEffect();
+        if (effect && effect->supportsTarget()) {
+            std::cerr << "Error: Spell " << spell->getName() << " requires a target." << std::endl;
+            return;
+        }
     }
+
     if (!game->isTestingMode()) {
         spendMagic(cost);
     }
@@ -191,7 +195,6 @@ void Player::playCard(int idx, Player* target, int cardIdx) {
             // Normal non-buff spell
             spell->play(targetMinion);
         }
-
         delete spell;
     } 
     // check if the card is a minion
