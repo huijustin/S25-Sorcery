@@ -59,6 +59,7 @@ public:
     void gainMagic(int amount);
     void spendMagic(int cost);
     void setRitual(std::unique_ptr<Ritual> newRitual);
+    void cleanupDeadMinions();
 
 };
 

@@ -2,7 +2,7 @@
 #include "Hand.h"
 #include "Board.h"
 #include "Ritual.h"
-#include "Graveyard.h
+#include "Graveyard.h"
 #include "ascii_graphics.h"
 #include <iostream>
 
