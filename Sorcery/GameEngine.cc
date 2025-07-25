@@ -6,7 +6,7 @@
 
 void GameEngine::run() {
     activePlayer = 0;
-    players[activePlayer]->startTurn();
+    getActivePlayer()->startTurn();
     notifyObservers();
 
     std::string cmdstring;
@@ -173,7 +173,27 @@ void GameEngine::displayHelp() {
     << "board -- Describe all cards on the board.\n"
     << std::endl; 
 }
-/*
+
+
+void GameEngine::quitGame() { // go back to main and main will terminate the program
+  gameOver = true;
+}
+
+
+void GameEngine::discardCard(int idx) {
+    Card* discardedCard = getActivePlayer()->getHand()->removeCard(idx - 1);
+    if (!discardedCard) {
+        std::cout << "Invalid card index.\n";
+        return;
+    }
+    delete discardedCard;
+    std::cout << "Card discarded.\n";
+}
+
+void GameEngine::startTurn() {
+    getActivePlayer()->startTurn(); // CHECK POINTER
+}
+
 void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basis
     players[activePlayer]->endTurn();
     if (activePlayer == 1) {
@@ -184,21 +204,13 @@ void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basi
     }
     players[activePlayer]->startTurn();
 } 
-*/
 
-void GameEngine::quitGame() { // go back to main and main will terminate the program
-  gameOver = true;
-}
-
-
-void GameEngine::discardCard(int idx) {
-    Card* discardedCard = getActivePlayer()->getHand().removeCard(idx - 1);
-    if (!discardedCard) {
-        std::cout << "Invalid card index.\n";
-        return;
+Player* GameEngine::getActivePlayer() const {
+    if (activePlayer < 0 || activePlayer >= players.size()) {
+        std::cerr << "Invalid active player index: " << activePlayer << std::endl;
+        return nullptr;
     }
-    delete discardedCard;
-    std::cout << "Card discarded.\n";
+    return players[activePlayer];
 }
 
 /*
