@@ -7,9 +7,7 @@
 #include <random>
 #include <chrono>
 
-extern CardFactory cardFactory;
-
-void  Deck::load_deck(const std::string& filename) {
+void Deck::load_deck(const std::string& filename, CardFactory& factory) {
     std::ifstream file(filename);
     if (!file) {
         std::cerr << "Could not open deck file: " << filename << std::endl;
@@ -19,9 +17,9 @@ void  Deck::load_deck(const std::string& filename) {
     std::string name;
     while (std::getline(file, name)) {
         if (name.empty()) continue;
-        std::unique_ptr<Card> card = CardFactory->cloneCardByName(name);
+        Card* card = factory.cloneCardByName(name);
         if (card) {
-            cards.push_back(card.release());
+            cards.push_back(card); // Pushes card
         }
         else {
             std::cerr << "Unknown card name in deck file: " << name << std::endl;
