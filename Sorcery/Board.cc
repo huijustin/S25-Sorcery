@@ -18,7 +18,7 @@ bool Board::addMinion(Minion* m) {
 }
 
 Minion* Board::removeMinion(int idx) {
-    if (idx < 1 || idx > minions.size()) {
+    if (idx < 1 || static_cast<std::size_t>(idx) > minions.size()) {
         std::cerr << "Invalid index for removing minion: " << idx << " in Board" << std::endl;
         return nullptr;
     }
