@@ -2,7 +2,10 @@
 #include <iostream>
 #include <typeinfo>
 
-Enchantment::Enchantment(Minion* base) : Minion(*base), base(base) {}
+Enchantment::Enchantment(Minion* base)
+    : Minion(base->getID(), base->getName(), base->getCost(), base->getAttack(), base->getDefence(), 
+    base->getAbility() ? base->getAbility()->clone() : nullptr, base->getCardText()),
+      base(base) {}
 
 Enchantment::~Enchantment() {
     if (base) delete base;

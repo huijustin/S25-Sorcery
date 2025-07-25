@@ -21,3 +21,4 @@ std::string Card::getCardText() const {
 }
 
 Card::~Card() {}
+

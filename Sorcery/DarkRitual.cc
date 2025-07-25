@@ -2,7 +2,8 @@
 #include <iostream>
 
 DarkRitual::DarkRitual()
-    : Ritual(19, "Dark Ritual", 1, "Start of Turn", 5) {} // ID, name, cost, trigger, charges
+    : Ritual(19,"Dark Ritual",1,"Gain 1 magic each turn",0,5,"Start of Turn") {}
+
 
 std::unique_ptr<Card> DarkRitual::clone() const {
     return std::make_unique<DarkRitual>(*this);
