@@ -14,7 +14,7 @@ void Graveyard::addMinion(Minion *minion) {
 
 Minion* Graveyard::getTop() const {
     if (minions.empty()) {
-        std::cerr << "Graveyard is empty, no top minion." << std::endl;
+        // std::cerr << "Graveyard is empty, no top minion." << std::endl;
         return nullptr;
     }
     else return minions.back();
@@ -22,7 +22,7 @@ Minion* Graveyard::getTop() const {
 
 Minion* Graveyard::resurrectTop() {
     if (minions.empty()) {
-        std::cerr << "Graveyard is empty, cannot resurrect minion." << std::endl;
+        // std::cerr << "Graveyard is empty, cannot resurrect minion." << std::endl;
         return nullptr;
     }
     Minion* resurrect = minions.back();
