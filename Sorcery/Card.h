@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include "ascii_graphics.h"
 
 class Card {
 protected:

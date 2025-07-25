@@ -1,10 +1,12 @@
 #pragma once
 #include "Card.h"
-#include "Enchantment.h"
 #include "Ability.h"
-#include "Player.h"
 #include "ascii_graphics.h"
 #include <vector>
+
+class Player;
+class Board;
+class Enchantment;
 
 class Minion : public Card {
 protected:

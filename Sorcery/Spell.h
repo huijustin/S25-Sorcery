@@ -17,7 +17,8 @@ public:
     void play() override;              // required by base class
     void play(Minion* target);         // overload for targeted spells
     Effect* getEffect() const;
+    std::unique_ptr<Card> clone() const override;
    card_template_t getTemplate() const override;
-}; 
+};
 
 #endif

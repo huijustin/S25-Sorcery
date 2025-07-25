@@ -19,3 +19,8 @@ void BuffEffect::apply() {
         std::cerr << "BuffEffect failed: No valid target." << std::endl;
     }
 }
+
+std::unique_ptr<Effect> BuffEffect::clone() const {
+    return std::make_unique<BuffEffect>(*this);
+}
+

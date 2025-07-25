@@ -24,6 +24,12 @@ Effect* Spell::getEffect() const {
     return effect.get();
 }
 
+std::unique_ptr<Card> Spell::clone() const {
+    return std::make_unique<Spell>(cardID, name, cost, cardText,
+                                   effect ? effect->clone() : nullptr);
+}
+
 card_template_t Spell::getTemplate() const {
     return display_spell(name, cost, cardText);
 }
+

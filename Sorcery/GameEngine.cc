@@ -1,6 +1,9 @@
-#include <GameEngine.h>
-#include <CardFactory.h>
-#include <TextView.h>
+#include "GameEngine.h"
+#include "CardFactory.h"
+#include "TextView.h"
+#include "Player.h"
+#include "Deck.h"
+#include "Hand.h"
 #include <iostream> 
 #include <fstream>
 #include <sstream>
@@ -218,24 +221,11 @@ void GameEngine::discardCard(int idx) {
 }
 
 void GameEngine::startTurn() {
-    getActivePlayer()->startTurn(); // CHECK POINTER
+    getActivePlayer()->startTurn();
 }
 
-void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basis
+void GameEngine::endTurn() {
     players[activePlayer]->endTurn();
-    if (activePlayer == 1) {
-        activePlayer = 0;
-    }
-    else {
-        activePlayer = 1;
-    }
+    activePlayer = (activePlayer == 1 ? 0 : 1);
     players[activePlayer]->startTurn();
-} 
-
-Player* GameEngine::getActivePlayer() const {
-    if (activePlayer < 0 || activePlayer >= players.size()) {
-        std::cerr << "Invalid active player index: " << activePlayer << std::endl;
-        return nullptr;
-    }
-    return players[activePlayer];
 }

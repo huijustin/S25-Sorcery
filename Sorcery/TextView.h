@@ -1,13 +1,13 @@
 #ifndef TEXTVIEW_H
 #define TEXTVIEW_H
-#include "TextView.h"
 #include "GameEngine.h"
-#include "Player.h"
-#include "Card.h"
-#include "Minion.h"
-#include "Ritual.h"
-#include "Enchantment.h"
 #include "ascii_graphics.h"
+
+class Player;
+class Card;
+class Minion;
+class Ritual;
+class Enchantment;
 #include "Observer.h"
 #include <iostream>
 #include <vector>

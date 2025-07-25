@@ -1,7 +1,9 @@
 #pragma once
 #include <memory>
+#include <string>
 #include "Effect.h"
-#include "Minion.h"
+
+class Minion;
 
 class Ability {
 protected:

@@ -29,3 +29,9 @@ void SummonEffect::apply() {
 void SummonEffect::setBoard(Board* board) {
     summonLocation = board;
 }
+
+std::unique_ptr<Effect> SummonEffect::clone() const {
+    return std::make_unique<SummonEffect>(*this);
+}
+
+

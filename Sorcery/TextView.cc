@@ -1,4 +1,10 @@
 #include "TextView.h"
+#include "Player.h"
+#include "Board.h"
+#include "Ritual.h"
+#include "Graveyard.h"
+#include "Minion.h"
+#include "Hand.h"
 #include "Card.h"
 #include <algorithm>
 
@@ -123,4 +129,4 @@ void TextView::inspectMinion(int playerIdx, int minionIdx) const {
 void TextView::notify() {
     printBoard();
 }
- 
+
