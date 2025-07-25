@@ -30,7 +30,7 @@ Minion* Board::removeMinion(int idx) {
 void Board::resetActions() {
     for (auto& minion : minions) {
         if (minion) {
-            minion->roundStart(); // Reset actions for each minion
+            minion->top()->roundStart(); // Reset actions for each minion
         }
     }
 }
