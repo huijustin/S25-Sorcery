@@ -47,9 +47,6 @@ const Graveyard* Player::getGraveyard() const { return graveyard; }
 Board* Player::getBoard() const { return board; }
 Hand* Player::getHand() const { return hand; }
 
-// for testing
-void Player::setLife(int l) { life = l; }
-void Player::setMagic(int m) { magic = m; }
 
 void Player::takeDamage(int amount) { 
     life -= amount; 
@@ -95,10 +92,14 @@ void Player::playCard(int idx) {
         return;
     }
 
-    if (!game->isTestingMode() && cost > magic) {
-        std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
-        return;
+    if (auto *spell = dynamic_cast<Spell*>(card)) {
+        auto *effect = spell->getEffect();
+        if (effect && effect->supportsTarget()) {
+            std::cerr << "Error: Spell " << spell->getName() << " requires a target." << std::endl;
+            return;
+        }
     }
+
     if (!game->isTestingMode()) {
         spendMagic(cost);
     }
@@ -191,7 +192,6 @@ void Player::playCard(int idx, Player* target, int cardIdx) {
             // Normal non-buff spell
             spell->play(targetMinion);
         }
-
         delete spell;
     } 
     // check if the card is a minion
