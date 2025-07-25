@@ -1,5 +1,8 @@
 #include "GiantStrengthEnchantment.h"
 
+GiantStrengthEnchantment::GiantStrengthEnchantment(Minion* baseMinion)
+    : Enchantment(baseMinion) {}
+
 int GiantStrengthEnchantment::getAttack() const {
     return base->getAttack() + 2;
 }
