@@ -29,7 +29,5 @@ int Ritual::getCharges() const { return charges; }
 std::string Ritual::getTriggerCondition() const { return triggerCondition; }
 
 card_template_t Ritual::getTemplate() const {
-    std::cerr << "activationCost is: " << activationCost << std::endl;
-    std::cerr << "Cost is: " << cost << std::endl;
     return display_ritual(name, cost, activationCost, cardText, charges);
 }

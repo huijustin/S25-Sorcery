@@ -382,10 +382,10 @@ void Player::setRitual(std::unique_ptr<Ritual> newRitual) {
 }
 
 void Player::cleanupDeadMinions() {
-    for (int i = static_cast<int>(board->getMinions().size()); i >= 1; --i) {
+    for (int i = static_cast<int>(board->getMinions().size()) - 1; i >= 0; --i) {
         Minion* m = board->getMinions()[i];
         if (m && m->getDefence() <= 0) {
-            Minion *removed = board->removeMinion(i);
+            Minion *removed = board->removeMinion(i + 1);
             if (removed) {
                 graveyard->addMinion(removed);
                 std::cout << removed->getName() << " has been moved to the graveyard." << std::endl;
