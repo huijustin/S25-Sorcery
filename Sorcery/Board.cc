@@ -36,6 +36,7 @@ void Board::resetActions() {
 }
 
 const std::vector<Minion*>& Board::getMinions() const { return minions; }
+std::vector<Minion*>& Board::getMinions() {return minions;}
 
 void Board::replaceMinion(int idx, Minion* newMinion) {
     if (idx < 1 || static_cast<std::size_t>(idx) > minions.size()) {

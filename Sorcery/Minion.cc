@@ -62,7 +62,10 @@ void Minion::play() {
 }
 
 void Minion::useAbility(Minion* target, Board* board) {
-    if (actions <= 0) { return; }
+    if (actions <= 0) { 
+        std::cout << "That minion is out of actions!" << std::endl;
+        return; 
+    }
 
     // Check for no Ability
     if (!getAbility()) {

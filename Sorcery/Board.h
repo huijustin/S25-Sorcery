@@ -17,6 +17,7 @@ public:
     
     // accessors
     const std::vector<Minion*>& getMinions() const;
+    std::vector<Minion*>& getMinions();
 };
 
 #endif

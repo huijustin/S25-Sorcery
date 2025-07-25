@@ -162,7 +162,7 @@ void Player::playCard(int idx, Player* target, int cardIdx) {
             }
 
             // Get the actual minion slot pointer on the board
-            Minion*& boardSlot = board->getMinions()[targetIdx - 1];  // assuming 1-based index
+            Minion*& boardSlot = board->getMinions()[cardIdx - 1];
 
             // Inject correct slot pointer into effect
             buff->setSlotPointer(&boardSlot);
