@@ -1,14 +1,13 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <string>
-#include "GameEngine.h"
-#include "Deck.h"
-#include "Hand.h"
-#include "Board.h"
-#include "Graveyard.h"
 #include "Ritual.h"
-#include "Minion.h"
-#include "Card.h"
+class GameEngine;
+class Deck;
+class Hand;
+class Graveyard;
+class Card;
+class Board;
 
 class Player {
     std::string name;

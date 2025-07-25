@@ -5,7 +5,10 @@
 #include "SummonEffect.h"
 #include <utility>
 #include <iostream>
-
+#include "Board.h"
+#include "GameEngine.h"
+#include "Deck.h"
+#include "Hand.h"
 
 /* Ctor and Dtor */
 
@@ -276,6 +279,7 @@ void Player::useAbility(int idx, Player* target, char cardType) {
         if (board->addMinion(minionCard)) {
             Card *toPlay = hand->removeCard(idx); 
             playSuccessful = true;
+            delete toPlay;
         } else {
             std::cerr << "Error: Board is full, cannot add minion." << std::endl;
             return;
@@ -309,6 +313,7 @@ void Player::useAbility(int idx, Player* target, char cardType) {
             // Remove spell from hand
             Card* toPlay = hand->removeCard(idx);
             playSuccessful = true;
+            delete toPlay;
 
             std::cout << "Applied enchantment spell: " << c->getName() << " to " << targetMinion->getName() << std::endl;
         } 

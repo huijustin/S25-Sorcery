@@ -1,5 +1,6 @@
 #include "BuffEffect.h"
 #include <iostream>
+#include "Minion.h"
 
 BuffEffect::BuffEffect(Minion** targetSlot, std::function<Minion*(Minion*)> enchantmentApplicator)
     : targetSlot(targetSlot), enchantmentApplicator(std::move(enchantmentApplicator)) {}

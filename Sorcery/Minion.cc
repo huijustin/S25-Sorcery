@@ -5,6 +5,7 @@
 #include "SummonEffect.h"
 #include "ActivatedAbility.h"
 #include "ascii_graphics.h"
+#include "Player.h"
 #include <iostream>
 
 Minion::Minion(int ID, std::string name, int cost, int attack, int defence, std::unique_ptr<Ability> ability, std::string cardText)
