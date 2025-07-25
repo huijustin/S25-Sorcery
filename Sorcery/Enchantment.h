@@ -16,4 +16,5 @@ public:
 
     static Minion* removeTopEnchantment(Minion* minion);
     static Minion* removeAllEnchantments(Minion* minion);
+    card_template_t getTemplate() const override;
 };

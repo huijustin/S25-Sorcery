@@ -43,3 +43,7 @@ Minion* Enchantment::removeAllEnchantments(Minion* minion) {
     }
     return minion;
 }
+
+card_template_t Enchantment::getTemplate() const {
+    return base->getTemplate();
+}

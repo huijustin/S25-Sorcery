@@ -52,5 +52,5 @@ public:
     virtual std::unique_ptr<Minion> cloneMinion() const;
 
     // rendering methods
-    virtual card_template_t getTemplate() const;
-};
+    virtual card_template_t getTemplate() const override;
+}; 
