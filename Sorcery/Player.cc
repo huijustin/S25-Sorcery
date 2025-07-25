@@ -95,6 +95,8 @@ void Player::playCard(int idx) {
         spendMagic(cost);
     }
 
+    card = hand->removeCard(idx);
+
     // check if the card is a minion
     if (auto* minion = dynamic_cast<Minion*>(card)) {
         if (!board->addMinion(minion)) {
@@ -124,7 +126,8 @@ void Player::playCard(int idx) {
 }
 
 void Player::playCard(int idx, Player* target, int cardIdx) {
-    Card* card = hand->removeCard(idx);
+    Card* card = hand->getCard(idx);
+
     if (!card) {
         std::cerr << "Error: No card at index " << idx << std::endl;
         return;
@@ -143,6 +146,9 @@ void Player::playCard(int idx, Player* target, int cardIdx) {
     if (!game->isTestingMode()) {
         spendMagic(cost);
     }
+
+    card = hand->removeCard(idx);
+
     Minion* targetMinion = nullptr;
     if (cardIdx > 0) {
         const auto targetBoard = target->getBoard()->getMinions();
