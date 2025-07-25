@@ -1,4 +1,4 @@
-#include <HasteEnchantment.h>
+#include "HasteEnchantment.h"
 #include <iostream>
 
 HasteEnchantment::HasteEnchantment(Minion* base) : Enchantment(base) {

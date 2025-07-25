@@ -2,8 +2,6 @@
 #define GAMEENGINE
 #include <vector>
 #include <string>
-#include "Player.h"
-#include "Card.h"
 #include "Observer.h"
 
 class Player;

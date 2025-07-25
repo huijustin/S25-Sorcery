@@ -4,8 +4,9 @@
 #include "ascii_graphics.h"
 #include <vector>
 
-class Enchantment;
 class Player;
+class Board;
+class Enchantment;
 
 class Minion : public Card {
 protected:

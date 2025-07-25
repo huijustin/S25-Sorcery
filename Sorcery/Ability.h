@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 #include "Effect.h"
 
 class Minion;
