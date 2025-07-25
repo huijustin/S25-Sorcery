@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "Card.h"
+#include "CardFactory.h"
 
 class Deck {
     std::vector<Card*> cards;

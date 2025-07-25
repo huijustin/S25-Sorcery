@@ -18,6 +18,7 @@ protected:
 
 public:
     Minion(int ID, std::string name, int cost, int attack, int defence, std::unique_ptr<Ability> ability, std::string cardText);
+    virtual ~Minion();
 
     void attackMinion(Minion* targetMinion);
     void attackPlayer(Player* targetPlayer);
@@ -37,7 +38,7 @@ public:
 
     virtual void roundStart(); // Run at roundstart to reset actions
     void roundEnd();
-    std::unique_ptr<Card> Minion::clone() const;
+    std::unique_ptr<Card> clone() const;
 
     // Simple Get functions
     virtual int getAttack() const;
