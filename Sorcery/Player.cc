@@ -16,7 +16,8 @@
 /* Ctor and Dtor */
 
 Player::Player(const std::string &name, Deck* deck, GameEngine* game)
-    : name{name}, life{20}, magic{3}, deck{deck}, ritual{nullptr}, game{game} {
+    : name{name}, life{20}, magic{3}, deck{deck}, 
+      hand{new Hand()}, board{new Board()}, graveyard{new Graveyard()}, ritual{nullptr}, game{game} {
     if (!game) {
         std::cerr << "Error: GameEngine pointer is null." << std::endl;
         throw std::invalid_argument("GameEngine pointer cannot be null");
@@ -29,7 +30,14 @@ Player::Player(const std::string &name, Deck* deck, GameEngine* game)
     }
 }
 
-Player::~Player() {}
+Player::~Player() {
+    delete deck;
+    delete hand;
+    delete board;
+    delete graveyard;
+    // ritual is managed by unique_ptr, no need to delete
+    // game is not owned by Player, so we don't delete it
+}
 
 std::string Player::getName() const { return name; }
 int Player::getLife() const { return life; }
