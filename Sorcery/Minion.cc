@@ -141,6 +141,12 @@ std::vector<Card*> Minion::getEnchantmentStack() const {
     }
     return stack;
 }
+void Minion::setEnchantmentStack(std::vector<std::unique_ptr<Card>>&& stack) {
+    if (!stack.empty()) {
+        enchantmentStack = std::move(stack);
+    }
+}
+
 void Minion::addEnchantmentCard(std::unique_ptr<Card> spellCard) { enchantmentStack.emplace_back(std::move(spellCard)); }
 
 std::unique_ptr<Card> Minion::clone() const {

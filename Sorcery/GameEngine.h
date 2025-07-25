@@ -23,7 +23,6 @@ class GameEngine {
     std::string deck1File = "";
     std::string deck2File = "";
     
-
     std::vector<Observer*> observers;
     TextView* textView = nullptr;
     GraphicsView* graphicsView = nullptr;
@@ -35,7 +34,7 @@ class GameEngine {
     void playCard(int idx);
     void attack();
     void discardCard(int idx);
-    // Make 2 plays, deck, card factory
+    
 public:
     GameEngine(bool testingMode, bool graphicMode, std::string initFile = "", std::string deck1File = "", std::string deck2File = "");
     ~GameEngine();
