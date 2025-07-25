@@ -29,8 +29,12 @@ public:
     void startTurn();
     void endTurn();
     void playCard(int idx);
+    void playCard(int idx, Player* target, char cardType);
+    void attack(int idx);
     void attack(int fromIdx, int toIdx);
+    void useAbility(int idx);
     void useAbility(int fromIdx, int targetIdx);
+    void useAbility(int idx, Player* target, char cardType);
     void drawCard();
 
     // accessors / setters

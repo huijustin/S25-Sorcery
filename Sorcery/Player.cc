@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Spell.h"
+#include "ActivatedAbility.h"
 #include "BuffEffect.h"
 #include "SummonEffect.h"
 #include <utility>
@@ -56,7 +57,7 @@ void Player::endTurn() {
 }
 
 void Player::playCard(int idx) {
-    Card* card = hand.removeCard(idx);
+    Card* card = hand->removeCard(idx);
     if (!card) {
         std::cerr << "Error: No card at index " << idx << std::endl;
         return;
@@ -65,41 +66,39 @@ void Player::playCard(int idx) {
     int cost = card->getCost();
     if (!game->isTestingMode() && cost > magic) {
         std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
-        hand.addCard(card); // Return the card back to hand
+        hand->addCard(card); // Return the card back to hand
         return;
     }
-    if (!game->isTestingMode) {
+    if (!game->isTestingMode()) {
         spendMagic(cost);
     }
 
     // check if the card is a minion
-    if (auto* minion = dynamic_cast<Minion*>(card>)) {
-        if (!board.addMinion(minion)) {
+    if (auto* minion = dynamic_cast<Minion*>(card)) {
+        if (!board->addMinion(minion)) {
             std::cerr << "Error: Board is full, cannot play minion " << minion->getName() << std::endl;
-            hand.addCard(card); // Return the card back to hand
+            hand->addCard(card); // Return the card back to hand
             return;
         }
         minion->play();
     } 
     // check if the card is a ritual
-    else if (auto* ritualCard = dynamic_cast<Ritual>(card)) {
+    else if (auto ritualCard = dynamic_cast<Ritual*>(card)) {
         ritualCard->play(this);
-        ritual = std::unique_ptr<Ritual>(ritualCard->clone());
+        ritual = std::unique_ptr<Ritual>(dynamic_cast<Ritual*>(ritualCard->clone().release()));
     }
     // else it is a spell
     else if (auto* spell = dynamic_cast<Spell*>(card)) {
         spell->play();
-        delete spell;{
-    }
-    else {
+        delete spell;
+    } else {
         std::cerr << "Error: Unknown card type for card " << card->getName() << std::endl;
-        hand.addCard(card); // Return the card back to hand
-        }
+        hand->addCard(card); // Return the card back to hand
     }
 }
 
 void Player::playCard(int idx, Player* target, char cardType) {
-    Card* card = hand.removeCard(idx);
+    Card* card = hand->removeCard(idx);
     if (!card) {
         std::cerr << "Error: No card at index " << idx << std::endl;
         return;
@@ -108,7 +107,7 @@ void Player::playCard(int idx, Player* target, char cardType) {
     int cost = card->getCost();
     if (!game->isTestingMode() && cost > magic) {
         std::cerr << "Not enough magic to play card " << card->getName() << std::endl;
-        hand.addCard(card); // Return the card back to hand
+        hand->addCard(card); // Return the card back to hand
         return;
     }
     if (!game->isTestingMode()) {
@@ -118,7 +117,7 @@ void Player::playCard(int idx, Player* target, char cardType) {
     Minion* targetMinion = nullptr;
     if (cardType != 'r') {
         int targetIdx = cardType - '0';
-        const auto* targetBoard = target->getBoard()->getMinions();
+        const auto targetBoard = target->getBoard()->getMinions();
         if (targetIdx >= 1 && targetIdx <= static_cast<int>(targetBoard.size())) {
             targetMinion = targetBoard[targetIdx - 1];
         }
@@ -131,25 +130,25 @@ void Player::playCard(int idx, Player* target, char cardType) {
     } 
     // check if the card is a minion
     else if (auto* minion = dynamic_cast<Minion*>(card)) {
-        if (!board.addMinion(minion)) {
+        if (!board->addMinion(minion)) {
             std::cerr << "Error: Board is full, cannot play minion " << minion->getName() << std::endl;
-            hand.addCard(card); // Return the card back to hand
+            hand->addCard(card); // Return the card back to hand
             return;
         }
         minion->play();
     } 
     // check if the card is a ritual
-    else if (auto* ritualCard = dynamic_cast<Ritual*>(card)) {
+    else if (auto ritualCard = dynamic_cast<Ritual*>(card)) {
         ritualCard->play(this);
-        ritual = std::unique_ptr<Ritual>(ritualCard->clone());
+        ritual = std::unique_ptr<Ritual>(dynamic_cast<Ritual*>(ritualCard->clone().release()));
     } else {
         std::cerr << "Error: Unknown card type for card " << card->getName() << std::endl;
-        hand.addCard(card); // Return the card back to hand
+        hand->addCard(card); // Return the card back to hand
     }
 }
 
-void attack(int idx) {
-    const auto& minions = board.getMinions();
+void Player::attack(int idx) {
+    const auto& minions = board->getMinions();
     if (idx < 1 || idx > static_cast<int>(minions.size())) {
         std::cerr << "Error: Invalid minion index " << idx << std::endl;
         return;
@@ -165,15 +164,15 @@ void attack(int idx) {
     attacker->useActions(1);
 }
 
-void attack(int fromIdx, int toIdx) {
-    const auto& myMinions = board.getMinions();
+void Player::attack(int fromIdx, int toIdx) {
+    const auto& myMinions = board->getMinions();
     if (fromIdx < 1 || fromIdx > static_cast<int>(myMinions.size())) {
         std::cerr << "Error: Invalid attacking minion index " << fromIdx << std::endl;
         return;
     }
 
     Player* opponent = game->getInactivePlayer();
-    const auto& opponentMinions = opponent->getBoard().getMinions();
+    const auto& opponentMinions = opponent->getBoard()->getMinions();
     if (toIdx < 1 || toIdx > static_cast<int>(opponentMinions.size())) {
         std::cerr << "Error: Invalid defending minion index " << toIdx << std::endl;
         return;
@@ -190,15 +189,15 @@ void attack(int fromIdx, int toIdx) {
     attacker->useActions(1);
 }
 
-void useAbility(int idx) {
-    const auto& minions = board.getMinions();
+void Player::useAbility(int idx) {
+    const auto& minions = board->getMinions();
     if (idx < 1 || idx > static_cast<int>(minions.size())) {
         std::cerr << "Error: Invalid minion index " << idx << std::endl;
         return;
     }
 
     Minion* m = minions[idx - 1];
-    auto* action = dynamic_cast<ActivatedAbility*>(m->getAbility());
+    auto action = dynamic_cast<ActivatedAbility*>(m->getAbility());
     if (action) {
         int cost = action->getActivationCost();
         if (!game->isTestingMode() && cost > magic) {
@@ -208,16 +207,16 @@ void useAbility(int idx) {
         if (!game->isTestingMode()) {
             spendMagic(cost);
         }
-        m->useAbility(nullptr, &board);
+        m->useAbility(nullptr, board);
     } else {
         std::cerr << "Error: Minion " << m->getName() << " does not have an activated ability." << std::endl;
         return;
     }
 }
 
-void useAbility(int idx, Player* target, char cardType) {
-    const auto& minions = board.getMinions();
-    if (idx < 1 || dix > static_cast<int>(minions.size())) {
+void Player::useAbility(int idx, Player* target, char cardType) {
+    const auto& minions = board->getMinions();
+    if (idx < 1 || idx > static_cast<int>(minions.size())) {
         std::cerr << "Error: Invalid minion index " << idx << std::endl;
         return;
     }
@@ -237,13 +236,13 @@ void useAbility(int idx, Player* target, char cardType) {
     Minion* targetMinion = nullptr;
     if (cardType != 'r') {
     int targetIdx = cardType - '0';
-    const auto& enemy = target->board.getMinions();
-    if (targetIdx >= 1 ** targetIdx <= static_cast<int>(enemy.size())) {
+    const auto& enemy = target->board->getMinions();
+    if (targetIdx >= 1 || targetIdx <= static_cast<int>(enemy.size())) {
         targetMinion = enemy[targetIdx - 1];
         }
     }
-    m->useAbility(targetMinion, &board);
-}
+    m->useAbility(targetMinion, board);
+
     if (idx < 1 || idx > hand->getSize()) {
         std::cerr << "Error: Invalid card index." << std::endl;
         return;
@@ -319,8 +318,6 @@ void useAbility(int idx, Player* target, char cardType) {
 
         }
     }
-
-
 
     // TODO: Handle other card types (Spells, Enchantments, etc.)
 
