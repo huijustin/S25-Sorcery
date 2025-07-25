@@ -8,6 +8,7 @@
 #include <iostream> 
 #include <fstream>
 #include <sstream>
+#include <string>
 #include "Deck.h"
 #include "Hand.h"
 
@@ -49,31 +50,46 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile,
             delete deck2;
             throw std::runtime_error("Failed to load deck for Player 2");
         }
-        /*
-        if (!deck1File.empty()) {
-            deck1->load_deck(deck1File, Factory);
-        }
-        else {
-            deck1->load_deck("default.deck", Factory);
-        }
 
-        Deck* deck2 = new Deck();
-        if (!deck2File.empty()) {
-            deck2->load_deck(deck2File, Factory);
-        }
-        else {
-            deck2->load_deck("default.deck", Factory);
-        }
-        */
         std::string name1, name2;
-        std::cout << "Enter Player 1's name: ";
-        std::cin >> name1;
-        std::cout << "Enter Player 2's name: ";
-        std::cin >> name2;
-
-        playerNames.push_back(name1);
-        playerNames.push_back(name2);
-
+        if (initFile == "") {
+            std::cout << "Enter Player 1's name: ";
+            std::cin >> name1;
+            std::cout << "Enter Player 2's name: ";
+            std::cin >> name2;
+            playerNames.push_back(name1);
+            playerNames.push_back(name2);
+        }
+        else {
+            std::string line;
+            int count = 0;
+            std::ifstream file(initFile);
+            while (std::getline(file, line)) {
+                if (count == 0) {
+                    std::cout << "count is: " << count << std::endl;
+                    name1 = line;
+                    playerNames.push_back(name1);
+                    count++;
+                }
+                else if (count == 1) {
+                    std::cout << "thecount is: " << count << std::endl;
+                    name2 = line;
+                    playerNames.push_back(name2);
+                    count++;
+                }
+                else {
+                    std::cout << "the count is: " << count << std::endl;
+                    processCommand(&line);
+                    std::cout << "doesn't get here: " << count << std::endl;
+                    count++;
+                }
+            }
+            if (count == 1) {
+                std::cout << "Enter Player 2's name: ";
+                std::cin >> name2;
+                playerNames.push_back(name2);
+            }
+        }
         players.emplace_back(new Player(name1, deck1, this));
         players.emplace_back(new Player(name2, deck2, this));
 
@@ -104,8 +120,7 @@ void GameEngine::run() {
             this->processCommand(cmdstring);
         }
     }
-    // DO WE NEED TO CHECK IF GAME HAS ENDED
-    std::cout << "Game has ended.\n"; 
+    std::cout << "Game has ended.\n"; // Game ended message
 }
 
 void GameEngine::processCommand(const std::string &input) {
@@ -119,19 +134,17 @@ void GameEngine::processCommand(const std::string &input) {
         args.push_back(arg);
     }
 
-    //Command cmd = parserCmd.parse(cmdString);
-
     if (cmd == "help") {
-        displayHelp();
+        displayHelp(); // call to displayHelp()
     }
     else if (cmd == "end") {
-        endTurn();  //NEED TO CHNAGE TO PLAYER ednTurn METHOD
+        endTurn();  // call to endTurn()
     }
     else if (cmd == "quit") {
-        quitGame();
+        quitGame(); // call to quitGame()
     }
     else if (cmd == "play") {
-        if (args.size() == 1) {
+        if (args.size() == 1) { // Checks the amount of arguments
             int idx = std::stoi(args[0]);
             getActivePlayer()->playCard(idx);
         }
@@ -139,39 +152,39 @@ void GameEngine::processCommand(const std::string &input) {
             int idx = std::stoi(args[0]);
             int targetPlayer = std::stoi(args[1]);
             char targetCard = std::stoi(args[2]);
-            getActivePlayer()->playCard(idx, getPlayer(targetPlayer-1), targetCard);  //NEED AN UPDATED playCard IN PLAYER CLASS
+            getActivePlayer()->playCard(idx, getPlayer(targetPlayer-1), targetCard); 
         }
         else {
-            std::cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
+            std::cout << "Invalid number of arguments for attack." << std::endl; // Message for invalid number of arguments
         }
     }
     else if (cmd == "attack") {
-        if (args.size() == 1) {
+        if (args.size() == 1) {     // Checks the amount of arguments
             int attackeridx = std::stoi(args[0]);
             getActivePlayer()->attack(attackeridx);
         }
         else if (args.size() == 2) {
             int attackeridx = std::stoi(args[0]);
             int defenderidx = std::stoi(args[1]);
-            getActivePlayer()->attack(attackeridx, defenderidx); //AMKE SURE WE HAVE THE RIGHT PARAMETERS IN ATTACK METHOD
+            getActivePlayer()->attack(attackeridx, defenderidx);
         }
         else {
-            std::cout << "Invalid number of arguments for attack." << std::endl;
+            std::cout << "Invalid number of arguments for attack." << std::endl; // Message for invalid number of arguments
         }
     }
     else if (cmd == "use") {   // Uses Minion Special Ability
         if (args.size() == 1) {
             int minionidx = std::stoi(args[0]);
-            getActivePlayer()->useAbility(minionidx); // CHECK IF ONE ARGUMENT IS VALID
+            getActivePlayer()->useAbility(minionidx);
         }
         else if (args.size() == 3) {
             int minionidx = std::stoi(args[0]);
             int targetPlayer = std::stoi(args[1]);
             int targetCard = std::stoi(args[2]);
-            getActivePlayer()->useAbility(minionidx, getPlayer(targetPlayer-1), targetCard); // NEED TO CHECK ARGUMENTS
+            getActivePlayer()->useAbility(minionidx, getPlayer(targetPlayer-1), targetCard);
         }
         else {
-            std::cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
+            std::cout << "Invalid number of arguments for attack." << std::endl; // Message for invalid number of arguments
         }
     }
     else if (cmd == "inspect") {  
@@ -278,12 +291,11 @@ void GameEngine::discardCard(int idx) {
 }
 
 void GameEngine::startTurn() {
-    getActivePlayer()->startTurn(); // CHECK POINTER
+    getActivePlayer()->startTurn();
 }
 
-void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basis
-    //players[activePlayer]->endTurn();
-    if (activePlayer == 1) {
+void GameEngine::endTurn() { 
+    if (activePlayer == 1) {    // Makes the other player the active one
         activePlayer = 0;
     }
     else {

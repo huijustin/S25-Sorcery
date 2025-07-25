@@ -147,4 +147,3 @@ void TextView::inspectMinion(int playerIdx, int minionIdx) const {
 void TextView::notify() {
     printBoard();
 }
- 
