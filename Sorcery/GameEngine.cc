@@ -59,12 +59,12 @@ void GameEngine::processCommand(const std::string &input) {
     else if (cmd == "attack") {
         if (args.size() == 1) {
             int attackeridx = std::stoi(args[0]);
-            getActivePlayer()->attack(attackeridx, getPlayer(1 - activePlayer));
+            getActivePlayer()->attack(attackeridx);
         }
         else if (args.size() == 2) {
             int attackeridx = std::stoi(args[0]);
             int defenderidx = std::stoi(args[1]);
-            getActivePlayer()->attack(attackeridx, getPlayer(1 - activePlayer), defenderidx); //AMKE SURE WE HAVE THE RIGHT PARAMETERS IN ATTACK METHOD
+            getActivePlayer()->attack(attackeridx, defenderidx); //AMKE SURE WE HAVE THE RIGHT PARAMETERS IN ATTACK METHOD
         }
         else {
             std::cout << "Invalid number of arguments for attack." << std::endl;
