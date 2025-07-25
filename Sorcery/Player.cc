@@ -51,7 +51,15 @@ Hand* Player::getHand() const { return hand; }
 void Player::setLife(int l) { life = l; }
 void Player::setMagic(int m) { magic = m; }
 
-void Player::takeDamage(int amount) { life -= amount; }
+void Player::takeDamage(int amount) { 
+    life -= amount; 
+    if (life <= 0) {
+        life = 0;
+        if (game) {
+            game->playerDefeated(this);
+        }
+    }
+}
 void Player::gainMagic(int amount) { magic += amount; }
 void Player::spendMagic(int cost) { magic -= cost; }
 
