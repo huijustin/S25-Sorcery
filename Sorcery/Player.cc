@@ -1,14 +1,17 @@
 #include "Player.h"
+#include "Deck.h"
+#include "Hand.h"
+#include "Board.h"
+#include "Graveyard.h"
+#include "Ritual.h"
+#include "Minion.h"
+#include "GameEngine.h"
 #include "Spell.h"
 #include "ActivatedAbility.h"
 #include "BuffEffect.h"
 #include "SummonEffect.h"
 #include <utility>
 #include <iostream>
-#include "Board.h"
-#include "GameEngine.h"
-#include "Deck.h"
-#include "Hand.h"
 
 /* Ctor and Dtor */
 

@@ -1,4 +1,5 @@
 #include "GraphicView.h"
+#include "Hand.h"
 #include <iostream>
 
 GraphicsView::GraphicsView(GameEngine* game) : game{game}, window{new Xwindow{800, 600}} {
@@ -38,8 +39,8 @@ void GraphicsView::drawHand(int playerIdx) const {
     Player *player = game->getPlayer(playerIdx);
     if (!player) return;
     int x = 10;
-    int y = (playerIdx == 0 ? 70 : window->getHieght() - 70);
-    for (Card* card : player->getHand().getCards()) {
+    int y = (playerIdx == 0 ? 70 : window->getHeight() - 70);
+    for (Card* card : player->getHand()->getCards()) {
         if (card) {
             window->drawString(x, y, card->getName() + " (" + std::to_string(card->getCost()) + ")");
             x += 100; // Adjust spacing between cards

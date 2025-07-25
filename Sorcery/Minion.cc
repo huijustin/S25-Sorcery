@@ -1,4 +1,6 @@
 #include "Minion.h"
+#include "Player.h"
+#include "Board.h"
 #include "Effect.h"
 #include "Enchantment.h"
 #include "DamageEffect.h"
@@ -11,6 +13,8 @@
 Minion::Minion(int ID, std::string name, int cost, int attack, int defence, std::unique_ptr<Ability> ability, std::string cardText)
     : Card(ID, std::move(name), cost, std::move(cardText)), // Card attributes
       attack(attack), defence(defence), actions(0), ability(std::move(ability)) {} // Minion attributes
+
+Minion::~Minion() = default;
 
 void Minion::attackMinion(Minion* targetMinion) {
     if (actions <= 0) { return; }

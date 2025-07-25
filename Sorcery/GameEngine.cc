@@ -1,6 +1,9 @@
-#include <GameEngine.h>
-#include <CardFactory.h>
-#include <TextView.h>
+#include "GameEngine.h"
+#include "CardFactory.h"
+#include "TextView.h"
+#include "Player.h"
+#include "Deck.h"
+#include "Hand.h"
 #include <iostream> 
 #include <fstream>
 #include <sstream>
