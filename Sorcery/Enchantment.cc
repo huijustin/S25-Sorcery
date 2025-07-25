@@ -43,3 +43,12 @@ Minion* Enchantment::removeAllEnchantments(Minion* minion) {
     }
     return minion;
 }
+
+card_template_t Enchantment::getTemplate() const {
+    if (name == "Giant Strength" || name == "Enrage") {
+        return display_enchantment_attack_defence(
+            name, cost, cardText, std::to_string(getAttack()), std::to_string(getDefence()));
+    } else {
+        return display_enchantment(name, cost, cardText);
+    }
+}

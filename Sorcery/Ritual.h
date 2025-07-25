@@ -26,7 +26,7 @@ public:
 
     std::unique_ptr<Card> clone() const override;
 
-    virtual card_template_t getTemplate() const;
+    card_template_t getTemplate() const override;
 };
 
 #endif
