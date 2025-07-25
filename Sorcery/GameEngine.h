@@ -19,6 +19,7 @@ class GameEngine {
     std::string initFile;
     std::vector<Card*> cardMasterList;
     std::vector<Card*> deckFiles;
+    std::vector<std::string> playerNames;
     std::string deck1File = "";
     std::string deck2File = "";
     
@@ -36,8 +37,8 @@ class GameEngine {
     void discardCard(int idx);
     // Make 2 plays, deck, card factory
 public:
-    GameEngine(bool testingMode, bool graphicMode, std::string initFile = "");
-    ~GameEngine();
+    GameEngine(bool testingMode, bool graphicMode, std::string initFile = "", std::string deck1File = "", std::string deck2File = "");
+
 
     void run();
     void processCommand(const std::string &input);
