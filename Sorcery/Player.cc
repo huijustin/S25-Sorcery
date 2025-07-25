@@ -16,8 +16,8 @@
 /* Ctor and Dtor */
 
 Player::Player(const std::string &name, Deck* deck, GameEngine* game)
-    : name{name}, life{20}, magic{2}, deck{deck}, 
-      hand{new Hand()}, board{new Board()}, graveyard{new Graveyard()}, ritual{nullptr}, game{game} {
+    : name{name}, life{20}, magic{3}, deck{deck}, 
+      hand{new Hand()}, board{new Board()}, graveyard{new Graveyard()}, ritual{nullptr}, game{game}, firsTurn{true} {
     if (!game) {
         std::cerr << "Error: GameEngine pointer is null." << std::endl;
         throw std::invalid_argument("GameEngine pointer cannot be null");
@@ -57,7 +57,11 @@ void Player::spendMagic(int cost) { magic -= cost; }
 
 
 void Player::startTurn() {
-    gainMagic(1);
+    if (firsTurn) {
+        firsTurn = false;
+    } else {
+        gainMagic(1);
+    }
     drawCard();
     if (getRitual()) {
         getRitual()->trigger("Start of Turn", this);
@@ -108,6 +112,10 @@ void Player::playCard(int idx) {
         std::cerr << "Error: Unknown card type for card " << card->getName() << std::endl;
         hand->addCard(card); // Return the card back to hand
     }
+
+    // update board and graveyard
+    cleanupDeadMinions();
+    game->getInactivePlayer()->cleanupDeadMinions();
 }
 
 void Player::playCard(int idx, Player* target, char cardType) {
@@ -158,6 +166,10 @@ void Player::playCard(int idx, Player* target, char cardType) {
         std::cerr << "Error: Unknown card type for card " << card->getName() << std::endl;
         hand->addCard(card); // Return the card back to hand
     }
+
+    // update board and graveyard
+    cleanupDeadMinions();
+    target->cleanupDeadMinions();
 }
 
 void Player::attack(int idx) {
@@ -175,6 +187,10 @@ void Player::attack(int idx) {
     Player* opponent = game->getInactivePlayer();
     attacker->attackPlayer(opponent);
     attacker->useActions(1);
+
+    // check for minions that may have died
+    cleanupDeadMinions();
+    opponent->cleanupDeadMinions();
 }
 
 void Player::attack(int fromIdx, int toIdx) {
@@ -200,6 +216,10 @@ void Player::attack(int fromIdx, int toIdx) {
 
     attacker->attackMinion(defender);
     attacker->useActions(1);
+
+    // check for minions that may have died
+    cleanupDeadMinions();
+    opponent->cleanupDeadMinions();
 }
 
 void Player::useAbility(int idx) {
@@ -221,6 +241,9 @@ void Player::useAbility(int idx) {
             spendMagic(cost);
         }
         m->useAbility(nullptr, board);
+        // check for minions that may have died
+        cleanupDeadMinions();
+        game->getInactivePlayer()->cleanupDeadMinions();
     } else {
         std::cerr << "Error: Minion " << m->getName() << " does not have an activated ability." << std::endl;
         return;
@@ -255,6 +278,9 @@ void Player::useAbility(int idx, Player* target, char cardType) {
         }
     }
     m->useAbility(targetMinion, board);
+    // check for minions that may have died
+    cleanupDeadMinions();
+    target->cleanupDeadMinions();
 
     if (idx < 1 || idx > hand->getSize()) {
         std::cerr << "Error: Invalid card index." << std::endl;
@@ -334,6 +360,9 @@ void Player::useAbility(int idx, Player* target, char cardType) {
     if (playSuccessful) {
         spendMagic(c->getCost());
         c->play();
+        // check again after playing card
+        cleanupDeadMinions();
+        target->cleanupDeadMinions();
     }
 }
 
@@ -350,4 +379,19 @@ void Player::drawCard() {
 
 void Player::setRitual(std::unique_ptr<Ritual> newRitual) {
     ritual = std::move(newRitual);
+}
+
+void Player::cleanupDeadMinions() {
+    for (int i = static_cast<int>(board->getMinions().size()); i >= 1; --i) {
+        Minion* m = board->getMinions()[i];
+        if (m && m->getDefence() <= 0) {
+            Minion *removed = board->removeMinion(i);
+            if (removed) {
+                graveyard->addCard(removed);
+                std::cout << removed->getName() << " has been moved to the graveyard." << std::endl;
+            } else {
+                std::cerr << "Error: Failed to clean up minion from board." << std::endl;
+            }            
+        }
+    }
 }
