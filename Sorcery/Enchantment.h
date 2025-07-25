@@ -1,5 +1,7 @@
 #pragma once
 #include "Minion.h"
+#include "ascii_graphics.h"
+
 
 class Enchantment : public Minion {
 protected:
