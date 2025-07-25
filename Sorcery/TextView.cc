@@ -62,7 +62,7 @@ void TextView::printBoard() const {
     // Player 2 Minions
     std::vector<card_template_t> p2_minions;
     for (int i = 0; i < 5; ++i) {
-        p2_minions.push_back(p2->getBoard()->getMinions(i) ? p2->getBoard()->getMinions(i)->getTemplate() : CARD_TEMPLATE_BORDER);
+        p2_minions.push_back(p2->getBoard()->getMinions()[i] ? p2->getBoard()->getMinions()[i]->getTemplate() : CARD_TEMPLATE_BORDER);
     }
     printCardRow(p2_minions);
 
@@ -85,7 +85,7 @@ void TextView::printHand(int playerIdx) const {
         std::cerr << "Error: Invalid player, cannot print hand" << std::endl;
         return;
     }
-    const auto& hand = player->getHand().getCards();
+    const auto& hand = player->getHand()->getCards();
     std::vector<card_template_t> handTemplates;
     for (const auto& card : hand) {
         handTemplates.push_back(card->getTemplate());
