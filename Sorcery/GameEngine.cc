@@ -26,8 +26,8 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile)
             deck2->load_deck("default.deck", Factory);
         }
 
-        players.emplace_back(new Player("Player 1", deck1File, this));
-        players.emplace_back(new Player("Player 2", deck2File, this));
+        players.emplace_back(new Player("Player 1", deck1, this));
+        players.emplace_back(new Player("Player 2", deck2, this));
 
         notifyObservers();
     }

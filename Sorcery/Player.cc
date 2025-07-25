@@ -9,9 +9,8 @@
 
 /* Ctor and Dtor */
 
-Player::Player(const std::string &name, const std::string& deckFile, GameEngine* game)
-    : name{name}, life{20}, magic{3}, ritual{nullptr}, game{game} {
-    deck->load_deck(deckFile);
+Player::Player(const std::string &name, Deck* deck, GameEngine* game)
+    : name{name}, life{20}, magic{3}, deck{deck}, ritual{nullptr}, game{game} {
     if (!game) {
         std::cerr << "Error: GameEngine pointer is null." << std::endl;
         throw std::invalid_argument("GameEngine pointer cannot be null");
