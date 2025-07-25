@@ -1,5 +1,9 @@
 #include "GraphicsView.h"
 #include "Hand.h"
+#include "Board.h"
+#include "Ritual.h"
+#include "Graveyard.h
+#include "ascii_graphics.h"
 #include <iostream>
 
 GraphicsView::GraphicsView(GameEngine* game) : game{game}, window{new Xwindow{800, 600}} {

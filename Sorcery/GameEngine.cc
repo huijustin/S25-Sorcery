@@ -62,7 +62,7 @@ void GameEngine::run() {
         }
     }
     // DO WE NEED TO CHECK IF GAME HAS ENDED
-    std::cout << "Game has ended.\n";
+    std::cout << "Game has ended.\n"; 
 }
 
 void GameEngine::processCommand(const std::string &input) {
