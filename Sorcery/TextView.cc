@@ -55,8 +55,13 @@ void TextView::printBoard() const {
 
     // Player 1 Minions
     std::vector<card_template_t> p1_minions;
+    const auto& p1Board = p1->getBoard()->getMinions();
     for (int i = 0; i < 5; ++i) {
-        p1_minions.push_back(p1->getBoard()->getMinions()[i] ? p1->getBoard()->getMinions()[i]->getTemplate() : CARD_TEMPLATE_BORDER);
+        if (i < static_cast<int>(p1Board.size()) && p1Board[i]) {
+            p1_minions.push_back(p1Board[i]->getTemplate());
+        } else {
+            p1_minions.push_back(CARD_TEMPLATE_BORDER);
+        }
     }
     printCardRow(p1_minions);
 
@@ -67,8 +72,13 @@ void TextView::printBoard() const {
 
     // Player 2 Minions
     std::vector<card_template_t> p2_minions;
+    const auto& p2Board = p2->getBoard()->getMinions();
     for (int i = 0; i < 5; ++i) {
-        p2_minions.push_back(p2->getBoard()->getMinions()[i] ? p2->getBoard()->getMinions()[i]->getTemplate() : CARD_TEMPLATE_BORDER);
+        if (i < static_cast<int>(p2Board.size()) && p2Board[i]) {
+            p2_minions.push_back(p2Board[i]->getTemplate());
+        } else {
+            p2_minions.push_back(CARD_TEMPLATE_BORDER);
+        }
     }
     printCardRow(p2_minions);
 
@@ -94,7 +104,11 @@ void TextView::printHand(int playerIdx) const {
     const auto& hand = player->getHand()->getCards();
     std::vector<card_template_t> handTemplates;
     for (const auto& card : hand) {
-        handTemplates.push_back(card->getTemplate());
+        if (card) {
+            handTemplates.push_back(card->getTemplate());
+        } else {
+            handTemplates.push_back(CARD_TEMPLATE_EMPTY);
+        }
     }
     printCardRow(handTemplates);
 }

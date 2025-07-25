@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 #include "CardFactory.h"
 #include "TextView.h"
+#include "GraphicsView.h"
 #include "Player.h"
 #include "Deck.h"
 #include "Hand.h"
@@ -34,8 +35,21 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile)
         players.emplace_back(new Player("Player 1", deck1, this));
         players.emplace_back(new Player("Player 2", deck2, this));
 
+        textView = new TextView{this};
+        if (graphicMode) {
+            graphicsView = new GraphicsView{this};
+        }
+
         notifyObservers();
     }
+
+GameEngine::~GameEngine() {
+    delete textView;
+    delete graphicsView;
+    for (auto *player : players) {
+        delete player;
+    }
+}
 
 
 void GameEngine::run() {

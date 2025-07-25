@@ -1,4 +1,4 @@
-#include "GraphicView.h"
+#include "GraphicsView.h"
 #include "Hand.h"
 #include <iostream>
 
