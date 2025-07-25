@@ -236,11 +236,3 @@ void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basi
     }
     players[activePlayer]->startTurn();
 } 
-
-Player* GameEngine::getActivePlayer() const {
-    if (activePlayer < 0 || activePlayer >= players.size()) {
-        std::cerr << "Invalid active player index: " << activePlayer << std::endl;
-        return nullptr;
-    }
-    return players[activePlayer];
-}

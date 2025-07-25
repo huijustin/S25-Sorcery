@@ -37,10 +37,10 @@ CardFactory::CardFactory() {
     auto novicePyromancer = std::make_unique<ActivatedAbility>(1, "Deal 1 damage", std::make_unique<DamageEffect>(1)); // Creates effect that deals 1 damage
     masterList.emplace_back(std::make_unique<Minion>(5, "Novice Pyromancer", 1, 0, 1, std::move(novicePyromancer), "Deal 1 damage to target minion"));
         // Apprentice Summoner
-    auto apprenticeSummoner = std::make_unique<ActivatedAbility>(1, "Summon 1 Air Elemental", std::make_unique<SummonEffect>(getMasterList()[0], 1, boardPlaceholder));
+    auto apprenticeSummoner = std::make_unique<ActivatedAbility>(1, "Summon 1 Air Elemental", std::make_unique<SummonEffect>(dynamic_cast<Minion*>(getMasterList()[0].get()), 1, boardPlaceholder));
     masterList.emplace_back(std::make_unique<Minion>(6, "Apprentice Summoner", 1, 1, 1, std::move(apprenticeSummoner), "Summon a 1/1 air elemental"));
         // Master Summoner
-    auto masterSummoner = std::make_unique<ActivatedAbility>(1, "Summon 3 Air Elementals", std::make_unique<SummonEffect>(getMasterList()[0], 3, boardPlaceholder));
+    auto masterSummoner = std::make_unique<ActivatedAbility>(1, "Summon 3 Air Elementals", std::make_unique<SummonEffect>(dynamic_cast<Minion*>(getMasterList()[0].get()), 3, boardPlaceholder));
     masterList.emplace_back(std::make_unique<Minion>(7, "Master Summoner", 3, 2, 3, std::move(masterSummoner), "Summon up to three 1/1 air elementals"));
     
     // Spells
@@ -91,3 +91,5 @@ std::unique_ptr<Card> CardFactory::cloneCardByName(const std::string& name) cons
     }
     return nullptr;
 }
+
+CardFactory Factory; // Global instance of CardFactory
