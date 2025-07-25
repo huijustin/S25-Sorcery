@@ -24,7 +24,6 @@ CardFactory::CardFactory() {
     // Create Minion Abilities
     
     Board* boardPlaceholder = nullptr;
-    Minion* enchantTarget = nullptr;
 
     // Minions                                   CardID, Name,        Cost,ATK,Def,Ability,                  Card Text
     masterList.emplace_back(std::make_unique<Minion>(0, "Air Elemental", 0, 1, 1, nullptr, ""));
@@ -47,19 +46,19 @@ CardFactory::CardFactory() {
     
     // Enchantment (Effectively the same as spell cards)
         // Giant Strength
-    auto giantStrength = std::make_unique<BuffEffect>(&enchantTarget, [](Minion* base) { return new GiantStrengthEnchantment(base); });
+    auto giantStrength = std::make_unique<BuffEffect>(nullptr, [](Minion* base) { return new GiantStrengthEnchantment(base); });
     masterList.emplace_back(std::make_unique<Spell>(14, "Giant Strength", 1, "Give a minion +2/+2", std::move(giantStrength))); 
         // Enrage
-    auto enrage = std::make_unique<BuffEffect>(&enchantTarget, [](Minion* base) { return new EnrageEnchantment(base); });
+    auto enrage = std::make_unique<BuffEffect>(nullptr, [](Minion* base) { return new EnrageEnchantment(base); });
     masterList.emplace_back(std::make_unique<Spell>(15, "Enrage", 2, "Give a minion *2/*2", std::move(enrage))); 
         // Haste
-    auto haste = std::make_unique<BuffEffect>(&enchantTarget, [](Minion* base) { return new HasteEnchantment(base); });
+    auto haste = std::make_unique<BuffEffect>(nullptr, [](Minion* base) { return new HasteEnchantment(base); });
     masterList.emplace_back(std::make_unique<Spell>(16, "Haste", 1, "Minion gains +1 action each turn", std::move(haste))); 
         // Magic Fatigue
-    auto magicFatigue = std::make_unique<BuffEffect>(&enchantTarget,[](Minion* base) { return new MagicFatigueEnchantment(base); });
+    auto magicFatigue = std::make_unique<BuffEffect>(nullptr,[](Minion* base) { return new MagicFatigueEnchantment(base); });
     masterList.emplace_back(std::make_unique<Spell>(17,"Magic Fatigue",1,"Minion abilities cost +2 mana",std::move(magicFatigue)));
         // Silence
-    auto silence = std::make_unique<BuffEffect>(&enchantTarget,[](Minion* base) { return new SilenceEnchantment(base); });
+    auto silence = std::make_unique<BuffEffect>(nullptr,[](Minion* base) { return new SilenceEnchantment(base); });
     masterList.emplace_back(std::make_unique<Spell>(18,"Silence",1,"Minion cannot use abilities",std::move(silence)));
     
     // Rituals

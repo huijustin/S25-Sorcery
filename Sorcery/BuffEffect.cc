@@ -6,9 +6,14 @@ BuffEffect::BuffEffect(Minion** targetSlot, std::function<Minion*(Minion*)> ench
     : targetSlot(targetSlot), enchantmentApplicator(std::move(enchantmentApplicator)) {}
 
 void BuffEffect::setTarget(Minion* target) {
-    if (targetSlot) {
-        *targetSlot = target;
+    if (!targetSlot) {
+        std::cerr << "Error: targetSlot is nullptr in BuffEffect::setTarget." << std::endl;
+        return;
     }
+    *targetSlot = target;
+}
+void BuffEffect::setSlotPointer(Minion** ptr) {
+    targetSlot = ptr;
 }
 
 void BuffEffect::apply() {
