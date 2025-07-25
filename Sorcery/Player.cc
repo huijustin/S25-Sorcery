@@ -387,7 +387,7 @@ void Player::cleanupDeadMinions() {
         if (m && m->getDefence() <= 0) {
             Minion *removed = board->removeMinion(i);
             if (removed) {
-                graveyard->addCard(removed);
+                graveyard->addMinion(removed);
                 std::cout << removed->getName() << " has been moved to the graveyard." << std::endl;
             } else {
                 std::cerr << "Error: Failed to clean up minion from board." << std::endl;

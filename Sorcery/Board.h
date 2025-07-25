@@ -13,6 +13,7 @@ public:
     bool addMinion(Minion* m);
     Minion* removeMinion(int idx);
     void resetActions();
+    void replaceMinion(int idx, Minion* newMinion);
     
     // accessors
     const std::vector<Minion*>& getMinions() const;
