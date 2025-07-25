@@ -2,7 +2,7 @@
 #include <iostream>
 
 DarkRitual::DarkRitual()
-    : Ritual(19,"Dark Ritual",1,"Gain 1 magic each turn",0,5,"Start of Turn") {}
+    : Ritual(19,"Dark Ritual",0,"Gain 1 magic each turn",1,5,"Start of Turn") {}
 
 
 std::unique_ptr<Card> DarkRitual::clone() const {
