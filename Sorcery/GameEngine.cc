@@ -7,6 +7,8 @@
 #include <iostream> 
 #include <fstream>
 #include <sstream>
+#include "Deck.h"
+#include "Hand.h"
 
 extern CardFactory Factory;
 
