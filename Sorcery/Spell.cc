@@ -23,3 +23,7 @@ void Spell::play(Minion* target) {
 Effect* Spell::getEffect() const {
     return effect.get();
 }
+
+card_template_t Spell::getTemplate() const {
+    return display_spell(name, cost, cardText);
+}

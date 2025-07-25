@@ -29,3 +29,7 @@ std::string Ritual::getTriggerCondition() const { return triggerCondition; }
 std::unique_ptr<Card> Ritual::clone() const {
     return std::make_unique<Ritual>(*this);
 }
+
+card_template_t Ritual::getTemplate() const {
+    return display_ritual(name, cost, activationCost, cardText, charges);
+}

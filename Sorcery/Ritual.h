@@ -3,6 +3,7 @@
 
 #include "Card.h"
 #include <string>
+#include "ascii_graphics.h"
 
 class Player;
 
@@ -24,6 +25,8 @@ public:
     std::string getTriggerCondition() const;
 
     std::unique_ptr<Card> clone() const override;
+
+    virtual card_template_t getTemplate() const;
 };
 
 #endif
