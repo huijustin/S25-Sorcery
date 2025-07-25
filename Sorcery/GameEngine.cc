@@ -12,10 +12,43 @@
 
 extern CardFactory Factory;
 
-GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile) :
+GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile, std::string deck1File, std::string deck2File) :
     testingMode{testingMode}, graphicMode{graphicMode}, initFile{initFile}, activePlayer{0}, gameOver{false} {
 
+        std::string player1DeckFile;
+        if (deck1File.empty()) {
+            player1DeckFile = "default.deck";
+        }
+        else {
+            player1DeckFile = deck1File;
+        }
+
+        std::string player2DeckFile;
+        if (deck2File.empty()) {
+            player2DeckFile = "default.deck";
+        }
+        else {
+            player2DeckFile = deck2File;
+        }
+
         Deck* deck1 = new Deck();
+        try {
+            deck1->load_deck(player1DeckFile, Factory);
+        }
+        catch (const std::exception& e) {
+            delete deck1;
+            throw std::runtime_error("Failed to load deck for Player 1");
+        }
+
+        Deck* deck2 = new Deck();
+        try {
+            deck2->load_deck(player2DeckFile, Factory);
+        }
+        catch (const std::exception& e) {
+            delete deck2;
+            throw std::runtime_error("Failed to load deck for Player 2");
+        }
+        /*
         if (!deck1File.empty()) {
             deck1->load_deck(deck1File, Factory);
         }
@@ -30,9 +63,18 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile)
         else {
             deck2->load_deck("default.deck", Factory);
         }
+        */
+        std::string name1, name2;
+        std::cout << "Enter Player 1's name: ";
+        std::cin >> name1;
+        std::cout << "Enter Player 2's name: ";
+        std::cin >> name2;
 
-        players.emplace_back(new Player("Player 1", deck1, this));
-        players.emplace_back(new Player("Player 2", deck2, this));
+        playerNames.push_back(name1);
+        playerNames.push_back(name2);
+
+        players.emplace_back(new Player(name1, deck1, this));
+        players.emplace_back(new Player(name2, deck2, this));
 
         notifyObservers();
     }
@@ -41,6 +83,7 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile)
 void GameEngine::run() {
     activePlayer = 0;
     getActivePlayer()->startTurn();
+    std::cout << "It is now " << playerNames[activePlayer] << "'s turn" << std::endl;
     notifyObservers();
 
     std::string cmdstring;
@@ -227,12 +270,13 @@ void GameEngine::startTurn() {
 }
 
 void GameEngine::endTurn() { // Make it so there is a Player 1 and Player 2 basis
-    players[activePlayer]->endTurn();
+    //players[activePlayer]->endTurn();
     if (activePlayer == 1) {
         activePlayer = 0;
     }
     else {
         activePlayer = 1;
     }
+    std::cout << "It is now " << playerNames[activePlayer] << "'s turn" << std::endl;
     players[activePlayer]->startTurn();
 } 
