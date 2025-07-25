@@ -38,7 +38,7 @@ class GameEngine {
     // Make 2 plays, deck, card factory
 public:
     GameEngine(bool testingMode, bool graphicMode, std::string initFile = "", std::string deck1File = "", std::string deck2File = "");
-
+    ~GameEngine();
 
     void run();
     void processCommand(const std::string &input);

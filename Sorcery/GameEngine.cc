@@ -14,7 +14,7 @@
 extern CardFactory Factory;
 
 GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile, std::string deck1File, std::string deck2File) :
-    testingMode{testingMode}, graphicMode{graphicMode}, initFile{initFile}, activePlayer{0}, gameOver{false} {
+    testingMode{testingMode}, graphicMode{graphicMode}, initFile{initFile}, activePlayer{0}, gameOver{false} {  // Constructor
 
         std::string player1DeckFile;
         if (deck1File.empty()) {
@@ -83,7 +83,7 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile,
         }
     }
 
-GameEngine::~GameEngine() {
+GameEngine::~GameEngine() { // Destructor
     delete textView;
     delete graphicsView;
     for (auto *player : players) {
