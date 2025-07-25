@@ -17,7 +17,7 @@ void Deck::load_deck(const std::string& filename, CardFactory& factory) {
     std::string name;
     while (std::getline(file, name)) {
         if (name.empty()) continue;
-        Card* card = factory.cloneCardByName(name);
+        Card* card = factory.cloneCardByName(name).release();
         if (card) {
             cards.push_back(card); // Pushes card
         }

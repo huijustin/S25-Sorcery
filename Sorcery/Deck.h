@@ -16,7 +16,7 @@ public:
     // returns true if deck is empty, else false
     bool isEmpty() const;
     // loads card names from file and use CardFactory to create cards
-    void load_deck(const std::string& filename);
+    void load_deck(const std::string& filename, CardFactory& factory);
 };
 
 #endif
