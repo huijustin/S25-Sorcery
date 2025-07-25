@@ -24,7 +24,7 @@ public:
     int getCharges() const;
     std::string getTriggerCondition() const;
 
-    std::unique_ptr<Card> clone() const override;
+    virtual std::unique_ptr<Card> clone() const override = 0;
 
     card_template_t getTemplate() const override;
 };

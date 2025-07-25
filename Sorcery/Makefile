@@ -1,62 +1,56 @@
 # Makefile for Sorcery
 
 # Compiler and flags
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -g
+CXX = g++-14
+CXXFLAGS = -std=c++20 -Wall -MMD -Werror=vla
 LDFLAGS = -lX11
 
 # Executable name
-TARGET = sorcery
+EXEC = sorcery
 
 # Source files
-SRCS = \
-    main.cc \
-    Ability.cc \
-    ActivatedAbility.cc \
-    ascii_graphics.cc \
-    Board.cc \
-    BuffEffect.cc \
-    Card.cc \
-    CardFactory.cc \
-    DamageEffect.cc \
-    DarkRitual.cc \
-    Deck.cc \
-    Enchantment.cc \
-    EnrageEnchantment.cc \
-    GameEngine.cc \
-    GiantStrengthEnchantment.cc \
-    Graveyard.cc \
-    GraphicView.cc \
-    Hand.cc \
-    HasteEnchantment.cc \
-    MagicFatigueEnchantment.cc \
-    Minion.cc \
-    Player.cc \
-    Ritual.cc \
-    SilenceEnchantment.cc \
-    Spell.cc \
-    SummonEffect.cc \
-    TextView.cc \
-    Window.cc
+OBJECTS = \
+    main.o \
+    Ability.o \
+    ActivatedAbility.o \
+    ascii_graphics.o \
+    Board.o \
+    BuffEffect.o \
+    Card.o \
+    CardFactory.o \
+    DamageEffect.o \
+    DarkRitual.o \
+    Deck.o \
+    Enchantment.o \
+    EnrageEnchantment.o \
+    GameEngine.o \
+    GiantStrengthEnchantment.o \
+    Graveyard.o \
+    GraphicsView.o \
+    Hand.o \
+    HasteEnchantment.o \
+    MagicFatigueEnchantment.o \
+    Minion.o \
+    Player.o \
+    Ritual.o \
+    SilenceEnchantment.o \
+    Spell.o \
+    SummonEffect.o \
+    TextView.o \
+    Window.o
 
-# Object files
-OBJS = $(SRCS:.cc=.o)
-
-# Phony targets
-.PHONY: all clean
+DEPENDS = ${OBJECTS:.o=.d}
 
 # Default target
-all: $(TARGET)
+${EXEC}: ${OBJECTS}
+	${CXX} ${CXXFLAGS} -o ${EXEC} ${OBJECTS} ${LDFLAGS}
 
-# Link the executable
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
+# Include dependency files
+-include ${DEPENDS}
 
-# Compile source files into object files
-%.o: %.cc
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Phony targets
+.PHONY: clean
 
 # Clean up build files
 clean:
-	rm -f $(TARGET) $(OBJS)
-	
+	rm -f ${EXEC} ${OBJECTS} ${DEPENDS}

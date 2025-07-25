@@ -18,6 +18,8 @@ public:
     void play(Minion* target);         // overload for targeted spells
     Effect* getEffect() const;
    card_template_t getTemplate() const override;
+    std::unique_ptr<Card> clone() const override;
+
 }; 
 
 #endif
