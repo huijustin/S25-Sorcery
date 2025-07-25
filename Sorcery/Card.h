@@ -14,7 +14,7 @@ public:
     virtual int getCost();   
     virtual int getID();
     virtual std::string getName() const;
-    std::string Card::getCardText() const;
+    std::string getCardText() const;
     virtual void play() = 0;
     virtual ~Card();
     virtual card_template_t getTemplate() const = 0; // Abstract method for rendering

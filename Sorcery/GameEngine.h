@@ -17,10 +17,13 @@ class GameEngine {
     int activePlayer;
     bool testingMode;
     bool graphicMode;
+    bool gameOver;
     std::string initFile;
     std::vector<Card*> cardMasterList;
     std::vector<Card*> deckFiles;
-    bool gameOver;
+    std::string deck1File = "";
+    std::string deck2File = "";
+    
 
     std::vector<Observer*> observers;
     TextView* textView = nullptr;
@@ -33,8 +36,10 @@ class GameEngine {
     void playCard(int idx);
     void attack();
     void discardCard(int idx);
-
+    // Make 2 plays, deck, card factory
 public:
+    GameEngine(bool testingMode, bool graphicMode, std::string initFile = "");
+
     void run();
     void processCommand(const std::string &input);
     void registerObserver(Observer*);
