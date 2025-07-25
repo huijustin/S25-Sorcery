@@ -74,7 +74,8 @@ void Player::endTurn() {
 }
 
 void Player::playCard(int idx) {
-    Card* card = hand->removeCard(idx);
+    Card* card = hand->getCard(idx);
+
     if (!card) {
         std::cerr << "Error: No card at index " << idx << std::endl;
         return;
@@ -83,7 +84,11 @@ void Player::playCard(int idx) {
     int cost = card->getCost();
     if (!game->isTestingMode() && cost > magic) {
         std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
-        hand->addCard(card); // Return the card back to hand
+        return;
+    }
+
+    if (!game->isTestingMode() && cost > magic) {
+        std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
         return;
     }
     if (!game->isTestingMode()) {
@@ -127,14 +132,17 @@ void Player::playCard(int idx, Player* target, int cardIdx) {
 
     int cost = card->getCost();
     if (!game->isTestingMode() && cost > magic) {
-        std::cerr << "Not enough magic to play card " << card->getName() << std::endl;
-        hand->addCard(card); // Return the card back to hand
+        std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
+        return;
+    }
+
+    if (!game->isTestingMode() && cost > magic) {
+        std::cerr << "Error: Not enough magic to play card " << card->getName() << std::endl;
         return;
     }
     if (!game->isTestingMode()) {
         spendMagic(cost);
     }
-
     Minion* targetMinion = nullptr;
     if (cardIdx > 0) {
         const auto targetBoard = target->getBoard()->getMinions();
@@ -145,7 +153,31 @@ void Player::playCard(int idx, Player* target, int cardIdx) {
 
     // check if the card is a spell
     if (auto* spell = dynamic_cast<Spell*>(card)) {
-        spell->play(targetMinion);
+        // If buff
+        if (auto* buff = dynamic_cast<BuffEffect*>(spell->getEffect())) {
+            if (!targetMinion) {
+                std::cerr << "BuffEffect requires a target minion, but none provided." << std::endl;
+                delete spell;
+                return;
+            }
+
+            // Get the actual minion slot pointer on the board
+            Minion*& boardSlot = board->getMinions()[targetIdx - 1];  // assuming 1-based index
+
+            // Inject correct slot pointer into effect
+            buff->setSlotPointer(&boardSlot);
+            buff->setTarget(boardSlot);
+            buff->apply();
+
+            // Also record the enchantment on the minion for later undo/display
+            boardSlot->addEnchantmentCard(spell->clone());
+
+            std::cout << "Applied BuffEffect from spell: " << spell->getName() << " to " << boardSlot->getName() << std::endl;
+        } else {
+            // Normal non-buff spell
+            spell->play(targetMinion);
+        }
+
         delete spell;
     } 
     // check if the card is a minion

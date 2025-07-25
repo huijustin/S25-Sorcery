@@ -11,6 +11,7 @@ void Spell::play() {
 void Spell::play(Minion* target) {
     if (effect) {
         if (effect->supportsTarget()) {
+            std::cerr << "Effect supports target" << std::endl;
             effect->setTarget(target);
         }
         effect->apply();

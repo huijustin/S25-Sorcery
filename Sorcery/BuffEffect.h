@@ -13,6 +13,7 @@ public:
 
     bool supportsTarget() const override { return true; }
     void setTarget(Minion* target) override;
+    void setSlotPointer(Minion** ptr);
     void apply() override;
     std::unique_ptr<Effect> clone() const override;
 };
