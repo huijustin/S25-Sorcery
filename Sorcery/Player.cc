@@ -191,7 +191,6 @@ void Player::playCard(int idx, Player* target, int cardIdx) {
             // Normal non-buff spell
             spell->play(targetMinion);
         }
-
         delete spell;
     } 
     // check if the card is a minion

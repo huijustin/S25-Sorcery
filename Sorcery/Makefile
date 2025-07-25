@@ -1,7 +1,7 @@
 # Makefile for Sorcery
 
 # Compiler and flags
-CXX = g++
+CXX = g++-14
 CXXFLAGS = -std=c++20 -Wall -MMD -Werror=vla
 LDFLAGS = -lX11
 
