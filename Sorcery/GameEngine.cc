@@ -26,8 +26,8 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile)
             deck2->load_deck("default.deck", Factory);
         }
 
-        players.emplace_back(new Player("Player 1", deck1File, this));
-        players.emplace_back(new Player("Player 2", deck2File, this));
+        players.emplace_back(new Player("Player 1", deck1, this));
+        players.emplace_back(new Player("Player 2", deck2, this));
 
         notifyObservers();
     }
@@ -114,11 +114,9 @@ void GameEngine::processCommand(const std::string &input) {
             std::cout << "Invalid number of arguments for attack." << std::endl; //CHECK IF THIS IS THE MESSAGE WE WANT TO USE
         }
     }
-    else if (cmd == "inspect") {       // NHAN TAKING CARE OF THIS CASE
-        if (args.size() == 1) {
-            int minionidx = std::stoi(args[0]);
-            //getActivePlayer()-> // CHECK IF ONE ARGUMENT IS VALID
-        }
+    else if (cmd == "inspect") {  
+        int minionidx = std::stoi(args[0]);
+        textView->inspectMinion(activePlayer, minionidx);
     }
     else if (cmd == "hand") {
         textView->printHand(activePlayer);

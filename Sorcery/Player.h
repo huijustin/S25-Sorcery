@@ -23,7 +23,7 @@ class Player {
 
 public:
     // ctor
-    Player(const std::string &name, const std::string& deckFile, GameEngine* game);
+    Player(const std::string &name, Deck* deck, GameEngine* game);
     ~Player();
     // public methods
     void startTurn();
