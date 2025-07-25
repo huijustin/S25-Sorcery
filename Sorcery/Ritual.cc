@@ -22,6 +22,8 @@ void Ritual::play(Player* owner) {
 
 int Ritual::getCost() { return cost; }
 
+int Ritual::getActivationCost() { return activationCost; }
+
 int Ritual::getCharges() const { return charges; }
 
 std::string Ritual::getTriggerCondition() const { return triggerCondition; }
