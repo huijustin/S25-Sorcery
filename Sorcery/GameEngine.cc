@@ -212,35 +212,3 @@ Player* GameEngine::getActivePlayer() const {
     }
     return players[activePlayer];
 }
-
-/*
-void GameEngine::attack(int attackeridx, std::optional<int> targetidx) {
-    Player* current = players[activerPlayer];
-    Player* opponent = players[1 - activePlayer];
-
-    Minion* attacker = current->getMinion(attackeridx);
-    if (!attacker) {
-        std::cout << "Invalid attacking minion index." << std::endl;
-        return;
-    }
-
-    if (!attacker->canAttack()) {
-        std::cout << "this minion cannot attack right now." << std::endl;
-        return;
-    }
-
-    if (targetidx.has_value()) {
-        Minion* target = opponent->getMinion(targetidx.value());
-        if (!target) {
-            std:cout << "invalid target minion." << std::endl;
-            return;
-        }
-        attacker->attack(target); // Attacks minion
-    }
-    else {
-        attacker->attack(opponent); // Directly attacks the player
-    }
-   
-    notifyObservers();
-}
- */
