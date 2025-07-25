@@ -171,7 +171,7 @@ void Player::playCard(int idx, Player* target, int cardIdx) {
         if (auto* buff = dynamic_cast<BuffEffect*>(spell->getEffect())) {
             if (!targetMinion) {
                 std::cerr << "BuffEffect requires a target minion, but none provided." << std::endl;
-                delete spell;
+                hand->addCard(card); // Return the card back to hand
                 return;
             }
 
