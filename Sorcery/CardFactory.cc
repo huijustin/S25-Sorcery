@@ -2,7 +2,6 @@
 #include "Effect.h" 
 #include "Ability.h"
 #include "ActivatedAbility.h"
-#include "TriggerAbility.h"
 #include "DamageEffect.h"  
 #include "SummonEffect.h"
 #include "BuffEffect.h"
