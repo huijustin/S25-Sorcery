@@ -17,6 +17,7 @@ public:
     std::string getCardText() const;
     virtual void play() = 0;
     virtual ~Card();
+    virtual card_template_t getTemplate() const = 0; // Abstract method for rendering
 
     virtual std::unique_ptr<Card> clone() const = 0; // Required to clone subclasses
 };
