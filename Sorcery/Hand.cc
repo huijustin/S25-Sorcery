@@ -13,7 +13,7 @@ bool Hand::addCard(Card *card) {
 }
 
 Card* Hand::removeCard(int i) {
-    if (i > hand.size() || i < 1) {
+    if (static_cast<std::size_t>(i) > hand.size() || i < 1) {
         std::cerr << "Invalid index for removing card: " << i << " in Hand" << std::endl;
         return nullptr;
     }
@@ -30,7 +30,7 @@ bool Hand::isFull() const { return hand.size() >= MAX_HAND_SIZE; }
 int Hand::getSize() const { return hand.size(); }
 
 Card* Hand::getCard(int i) const {
-    if (i > hand.size() || i < 1) {
+    if (static_cast<std::size_t>(i) > hand.size() || i < 1) {
         std::cerr << "Invalid index for getting card: " << i << " in Hand" << std::endl;
         return nullptr;
     } else {
