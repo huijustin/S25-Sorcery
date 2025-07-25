@@ -36,3 +36,12 @@ void Board::resetActions() {
 }
 
 const std::vector<Minion*>& Board::getMinions() const { return minions; }
+
+void Board::replaceMinion(int idx, Minion* newMinion) {
+    if (idx < 1 || static_cast<std::size_t>(idx) > minions.size()) {
+        std::cerr << "Invalid index for replacing minion: " << idx << std::endl;
+        return;
+    }
+    delete minions[idx - 1]; // prevent memory leak
+    minions[idx - 1] = newMinion;
+}
