@@ -59,39 +59,32 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile,
             std::cin >> name2;
             playerNames.push_back(name1);
             playerNames.push_back(name2);
+            players.emplace_back(new Player(name1, deck1, this));
+            players.emplace_back(new Player(name2, deck2, this));
         }
         else {
-            std::string line;
-            int count = 0;
             std::ifstream file(initFile);
-            while (std::getline(file, line)) {
-                if (count == 0) {
-                    std::cout << "count is: " << count << std::endl;
-                    name1 = line;
-                    playerNames.push_back(name1);
-                    count++;
-                }
-                else if (count == 1) {
-                    std::cout << "thecount is: " << count << std::endl;
-                    name2 = line;
-                    playerNames.push_back(name2);
-                    count++;
-                }
-                else {
-                    std::cout << "the count is: " << count << std::endl;
-                    processCommand(&line);
-                    std::cout << "doesn't get here: " << count << std::endl;
-                    count++;
-                }
+            if (!file) {
+                throw std::runtime_error("Could not open the init file");
             }
-            if (count == 1) {
-                std::cout << "Enter Player 2's name: ";
-                std::cin >> name2;
+            std::string line;
+            if (std::getline(file, line)) {
+                name1 = line;
+                playerNames.push_back(name1);
+                players.emplace_back(new Player(name1, deck1, this));
+            }
+            else {
+                throw std::runtime_error("Init file is empty");
+            }
+            if (std::getline(file, line)) {
+                name2 = line;
                 playerNames.push_back(name2);
+                players.emplace_back(new Player(name2, deck2, this));
+            }
+            while (std::getline(file, line)) {
+                processCommand(line);
             }
         }
-        players.emplace_back(new Player(name1, deck1, this));
-        players.emplace_back(new Player(name2, deck2, this));
 
         textView = new TextView{this};
         if (graphicMode) {
