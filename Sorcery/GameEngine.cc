@@ -39,8 +39,6 @@ GameEngine::GameEngine(bool testingMode, bool graphicMode, std::string initFile)
         if (graphicMode) {
             graphicsView = new GraphicsView{this};
         }
-
-        notifyObservers();
     }
 
 GameEngine::~GameEngine() {
