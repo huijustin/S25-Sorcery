@@ -4,9 +4,9 @@
 
 class Card {
 protected:
-    int cost;
     int cardID;
     std::string name;
+    int cost;
     std::string cardText;
 
 public:
