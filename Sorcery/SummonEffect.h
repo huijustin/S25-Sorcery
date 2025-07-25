@@ -1,8 +1,9 @@
 #pragma once
 #include "Effect.h"
 #include "Minion.h"
-#include "Board.h"
 #include <memory>
+
+class Board;
 
 class SummonEffect : public Effect {
     Minion* toSummon;

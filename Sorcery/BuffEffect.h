@@ -1,7 +1,8 @@
 #pragma once
 #include "Effect.h"
-#include "Minion.h"
 #include <functional>
+
+class Minion;
 
 class BuffEffect : public Effect {
     Minion** targetSlot;  // Pointer to a pointer to minion(from game logic)

@@ -1,11 +1,11 @@
 #pragma once
 #include "Card.h"
 #include "Ability.h"
-#include "Player.h"
 #include "ascii_graphics.h"
 #include <vector>
 
 class Enchantment;
+class Player;
 
 class Minion : public Card {
 protected:
