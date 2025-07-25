@@ -23,3 +23,8 @@ void DamageEffect::apply() {
     std::cout << targetEntity->getName() << " takes " << damage << " damage!" << std::endl;
     targetEntity->takeDamage(damage);
 }
+
+std::unique_ptr<Effect> DamageEffect::clone() const {
+    auto cloned = std::make_unique<DamageEffect>(damage);
+    return cloned;
+}

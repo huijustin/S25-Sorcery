@@ -1,4 +1,5 @@
 #include "SummonEffect.h"
+#include "Board.h"
 #include <iostream>
 
 SummonEffect::SummonEffect(Minion* toSummon, int amount, Board* summonLocation)
@@ -28,4 +29,8 @@ void SummonEffect::apply() {
 
 void SummonEffect::setBoard(Board* board) {
     summonLocation = board;
+}
+
+std::unique_ptr<Effect> SummonEffect::clone() const {
+    return std::make_unique<SummonEffect>(toSummon ? toSummon->cloneMinion().release() : nullptr,amount,summonLocation );
 }

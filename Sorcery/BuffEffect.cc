@@ -20,3 +20,8 @@ void BuffEffect::apply() {
         std::cerr << "BuffEffect failed: No valid target." << std::endl;
     }
 }
+
+std::unique_ptr<Effect> BuffEffect::clone() const {
+    // cloned effect will need targetSlot to be re-set later
+    return std::make_unique<BuffEffect>(nullptr, enchantmentApplicator);
+}
