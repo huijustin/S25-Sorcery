@@ -50,10 +50,6 @@ public:
     Board* getBoard() const;
     Hand* getHand() const;
 
-    // for testing
-    void setLife(int l);
-    void setMagic(int m);
-
     // game actions
     void takeDamage(int amount);
     void gainMagic(int amount);

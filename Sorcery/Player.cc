@@ -47,9 +47,6 @@ const Graveyard* Player::getGraveyard() const { return graveyard; }
 Board* Player::getBoard() const { return board; }
 Hand* Player::getHand() const { return hand; }
 
-// for testing
-void Player::setLife(int l) { life = l; }
-void Player::setMagic(int m) { magic = m; }
 
 void Player::takeDamage(int amount) { 
     life -= amount; 
