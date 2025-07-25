@@ -23,6 +23,7 @@ class Player {
     Graveyard* graveyard;
     std::unique_ptr<Ritual> ritual;
     GameEngine* game;
+    bool firsTurn;
 
 public:
     // ctor
@@ -58,6 +59,7 @@ public:
     void gainMagic(int amount);
     void spendMagic(int cost);
     void setRitual(std::unique_ptr<Ritual> newRitual);
+    void cleanupDeadMinions();
 
 };
 

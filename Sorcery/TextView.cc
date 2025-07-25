@@ -93,6 +93,10 @@ void TextView::printBoard() const {
 
     // Bottom border of game board
     std::cout << EXTERNAL_BORDER_CHAR_BOTTOM_LEFT << border_h << EXTERNAL_BORDER_CHAR_BOTTOM_RIGHT << std::endl;
+
+    // print who's turn it is
+    std::cout << "Type 'help' for commands." << std::endl;
+    std::cout << (game->getActivePlayer()->getName()) << "'s turn > ";
 }
 
 void TextView::printHand(int playerIdx) const {
