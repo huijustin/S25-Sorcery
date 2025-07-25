@@ -3,6 +3,7 @@
 
 #include "Card.h"
 #include <string>
+#include "ascii_graphics.h"
 
 class Player;
 
@@ -25,8 +26,7 @@ public:
 
     std::unique_ptr<Card> clone() const override;
 
-    card_template_t getTemplate() const override;
-
+    virtual card_template_t getTemplate() const;
 };
 
 #endif
