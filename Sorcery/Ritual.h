@@ -21,6 +21,7 @@ public:
     void play(Player* owner);
 
     int getCost() override;
+    int getActivationCost();
     int getCharges() const;
     std::string getTriggerCondition() const;
 
